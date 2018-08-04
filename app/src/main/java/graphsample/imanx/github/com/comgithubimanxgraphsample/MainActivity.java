@@ -51,36 +51,38 @@ public class MainActivity extends AppCompatActivity {
 
     // get Mutation Request Builder
     public Request.Builder getMutation() {
+
         return new Request.Builder(this, uri, new Mutation() {
+
+            @Override
+            public String[] getResponseFields() {
+                return new String[]{"id","pan"};
+            }
+
+            @Override
+            public String getOperationName() {
+                return "CardRestore";
+            }
 
             @Override
             public HashMap<String, ?> getRequestFields() {
                 HashMap<String, String> hm = new HashMap<>();
-                hm.put("id", "12");
+                hm.put("id", "7");
                 return hm;
-            }
-
-            @Override
-            public String getFunctionName() {
-                return "CardRemove";
             }
         });
     }
 
     // get Query Request Builder
     public Request.Builder getQuery() {
-        return new Request.Builder(this, uri, new Query() {
 
-            @Override
-            public String[] getResponseFields() {
-                return new String[]{"id", "birthday", "username", "avatar"};
-            }
+        CardModel cardModel = new CardModel();
 
+        return new Request.Builder(this, uri, new Query(cardModel) {
             @Override
             public String getOperationName() {
-                return "Me";
+                return "Cards";
             }
-
         });
     }
 }

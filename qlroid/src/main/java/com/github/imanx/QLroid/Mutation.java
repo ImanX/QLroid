@@ -16,7 +16,7 @@ public abstract class Mutation extends GraphCore {
     }
 
     public Mutation() {
-        super(new GraphModel());
+        super(null);
     }
 
 
@@ -24,11 +24,9 @@ public abstract class Mutation extends GraphCore {
         return null;
     }
 
-    public abstract String getFunctionName();
-
     @Override
     public String getQuery() {
-        String        query = "mutation {%s(%s)}";
+        String        query = "mutation { %s %s(%s){%s}}";
         StringBuilder args  = new StringBuilder();
 
         if (getRequestFields() != null) {
@@ -37,9 +35,10 @@ public abstract class Mutation extends GraphCore {
             }
         }
         return String.format(query,
-                getFunctionName(),
-                args
+                getModel() == null ? "" : ":" + getModel().getResponseModelName(),
+                getOperationName(),
+                args,
+                getFields()
         );
-
     }
 }

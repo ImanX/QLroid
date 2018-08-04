@@ -24,6 +24,8 @@ public abstract class GraphCore {
 
     public abstract String getQuery();
 
+    public abstract String getOperationName();
+
 
     public String[] getResponseFields() {
         return null;

@@ -10,5 +10,4 @@ public class GraphModel {
     public String getResponseModelName(){
         return this.getClass().getSimpleName();
     }
-
 }

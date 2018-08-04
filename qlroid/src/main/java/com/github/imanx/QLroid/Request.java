@@ -36,7 +36,7 @@ public class Request {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                Log.i("TAG", "run: "+builder.graphCore.getQuery());
 
 //                try {
 //
