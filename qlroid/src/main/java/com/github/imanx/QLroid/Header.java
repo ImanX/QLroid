@@ -3,6 +3,7 @@ package com.github.imanx.QLroid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ImanX.
@@ -12,50 +13,30 @@ import java.util.List;
 public class Header {
 
 
-    private List<Entity> list;
+    private HashMap<String, String> map;
 
     public Header() {
-        this.list = new ArrayList<>();
+        if (this.map == null) {
+            this.map = new HashMap<>();
+        }
+
     }
 
-    public void append(Entity entity) {
-        this.list.add(entity);
+
+    public void append(String key, String value) {
+        this.map.put(key, value);
     }
 
-    public List<Entity> getEntity() {
-        return this.list;
+
+    public Map.Entry<String, String> getHeaderEntity(String key) {
+        for (Map.Entry<String, String> entry : this.map.entrySet()) {
+            if (entry.getKey().equals(key)) return entry;
+        }
+        return null;
     }
 
 
     public HashMap<String, String> getMap() {
-        HashMap<String, String> map = new HashMap<>();
-        for (Entity entity : list){
-            map.put(entity.getField() , entity.getDescription());
-        }
-
-        return map;
-    }
-
-    public static class Entity {
-
-        private String field;
-        private String description;
-
-        public Entity(String field, String description) {
-            this.description = description;
-            this.field = field;
-        }
-
-
-        public String getField() {
-            return field;
-        }
-
-
-        public String getDescription() {
-            return description;
-        }
-
-
+        return this.map;
     }
 }

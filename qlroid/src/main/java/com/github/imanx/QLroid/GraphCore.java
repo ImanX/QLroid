@@ -31,6 +31,7 @@ public abstract class GraphCore {
 
 
     public String getFields() {
+
         if (getResponseFields() != null) {
             return wrap(Arrays.asList(getResponseFields()));
         }
