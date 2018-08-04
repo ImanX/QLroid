@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final  String TAG     = "TAG_A";
+    public static final String TAG = "TAG_A";
 
     private static final String baseUrl = "http://192.168.66.115/api/graphql";
     private Uri uri;
@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.uri = Uri.parse(baseUrl);
 
-        getMutation().setHeader(header)
+        getQuery()
+                .setHeader(header)
                 .setTimeout(10)
                 .build()
                 .enqueue(new Callback() {
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public String[] getResponseFields() {
-                return new String[]{"id","pan"};
+                return new String[]{"id", "pan"};
             }
 
             @Override
