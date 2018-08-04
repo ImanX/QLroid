@@ -1,5 +1,7 @@
 package com.github.imanx.QLroid;
 
+import android.util.Log;
+
 import java.util.HashMap;
 
 /**
@@ -13,25 +15,30 @@ public abstract class Mutation extends GraphCore {
         super(model);
     }
 
-    public abstract HashMap<String, ?> getRequestFields();
+    public Mutation() {
+        super(null);
+    }
 
-    public abstract String getFunctionName();
+
+    public HashMap<String, ?> getRequestFields() {
+        return null;
+    }
 
     @Override
     public String getQuery() {
-        String query = "mutation { %s : %s(%s){%s}}";
-        String args  = "";
+        String        query = "mutation { %s %s(%s){%s}}";
+        StringBuilder args  = new StringBuilder();
 
-        for (HashMap.Entry<String, ?> entry : getRequestFields().entrySet()) {
-            args += entry.getKey() +":" + entry.getValue() + "\n";
+        if (getRequestFields() != null) {
+            for (HashMap.Entry<String, ?> entry : getRequestFields().entrySet()) {
+                args.append(entry.getKey()).append(":").append(entry.getValue());
+            }
         }
-
         return String.format(query,
-                getModel().getResponseModelName(),
-                getFunctionName(),
+                getModel() == null ? "" : ":" + getModel().getResponseModelName(),
+                getOperationName(),
                 args,
                 getFields()
         );
-
     }
 }

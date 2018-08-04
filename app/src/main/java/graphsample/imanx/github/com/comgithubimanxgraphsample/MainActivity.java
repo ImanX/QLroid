@@ -7,51 +7,82 @@ import android.util.Log;
 
 import com.github.imanx.QLroid.Callback;
 import com.github.imanx.QLroid.Header;
+import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.Request;
 
-public class MainActivity extends AppCompatActivity implements Callback {
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity {
+
+    public static final  String TAG     = "TAG_A";
+
+    private static final String baseUrl = "http://192.168.66.115/api/graphql";
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImMxMTZhMzIyNGYxOTFhMjcwMjFjZDU2ZDZmZTBiZjkyNjJmOTBkNWEzNGZjMGRlZjE2MzI1YjRmNjdkYTI4NWFiYWViNjVjYjM0NGQ1MGMzIn0.eyJhdWQiOiIxIiwianRpIjoiYzExNmEzMjI0ZjE5MWEyNzAyMWNkNTZkNmZlMGJmOTI2MmY5MGQ1YTM0ZmMwZGVmMTYzMjViNGY2N2RhMjg1YWJhZWI2NWNiMzQ0ZDUwYzMiLCJpYXQiOjE1MzMzNjIxMzAsIm5iZiI6MTUzMzM2MjEzMCwiZXhwIjoxNTY0ODk4MTMwLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.fLR7YlfFWis7y3HHPS8svK3hPeTkJ3PoFbFQR0MCD7Ids764OyUgqZeGxp8ASbEktSvqAEpcAOr9zO9DgL71HR3a6Pgd_Nrlv3RVV1CEzkAOjdBKGFSLeDSwT8cnCaOrYMrUjzXJV1CMjpDtXuR1CNPOVfVkKL9l6sXrbzoHuyXDeharv5h0DkkdtEfFP3_UhdGYHDjDfx4bDcBDKLWa7zdwMsJ9BnyLPVIEXlfUDlHkUjXbX17FqIN-XKvWuzKnRSr82ic6dhQABLmRsQZGa-1CgovP2rRK1_RNMwNoVQnAtMH55HFYC2Hjsu4RsSkThavpkUCFjYCU1lTNDi8qt1AzUGrIanX69dCYhJ946pyml7eNUDqA4TjFq3DuY7Kxa6UqauAJ3Jq4HoJ_ek7F9CGaFsvBg3Q7GgIwew46UuiKiChp4R0_0D0k5zNDmgkA_tKYx9dxtB6TXsX7v7dMtQz6wKtg8FqPfR6MNeAPGZqBmvvYNQ-CrzZWB69nKZCg6iDi5rmbCZXBiCWBk-MGH9VeO7vuSOaKlMJG-ccqqv89bYg3DQKAaJEWR-PSJKCfTvp6kH6pCn9X-gxF2fWsYionBHWwAzagMpRek_odbeQnAgjMpzKYZv8KwCVtq7sGB209XnWdfk17fvZJrknmK_5taArM0AesbBeUuLRKTO4";
 
         Header header = new Header();
-        header.append(
-                "Authorization",
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjFjMTc0Y2U1Zjg5MWNmNjc5ZDk0ZDcwZWNhYWU0NWU5ZDAyN2Y2MDViOWY1ZDBiZDRlMTc2ZjRhOGY5OTUyNWUyZmUwNzg4YzliOWVjMGM4In0.eyJhdWQiOiIxIiwianRpIjoiMWMxNzRjZTVmODkxY2Y2NzlkOTRkNzBlY2FhZTQ1ZTlkMDI3ZjYwNWI5ZjVkMGJkNGUxNzZmNGE4Zjk5NTI1ZTJmZTA3ODhjOWI5ZWMwYzgiLCJpYXQiOjE1MzMxMDc4NDQsIm5iZiI6MTUzMzEwNzg0NCwiZXhwIjoxNTY0NjQzODQ0LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.h6MMHTmF36Syru8IRCLJwE947zvIOv2WdXcdw1gf0odI_ANwHzZyZu6ZUhJPUO_FtLIFGymlgumEo_XRAPjdxCVlM-sepkWIqjsavZHwbdcj5bhW32CUqBpoXSh4tfLNc1YdjrbnlXjExlL3UsOmYkN_er5WQNiXLYH8QYDelGLHCF6eZWE6YvDHB8QzDcY6pjFEmWvXgpBuoR2OXkNDibPhOQC7N4sdvozQ-5adDuEeOfD_e39ZyiaV3WIFYYotXef-pNAk7RIJVRlk077fGYmVKL-oUQnNfLca7w_QE5v3XDYUm0hJceXSNdmiMQ9_YjZOKOKUBh_wwpVDthQzw8c34bsGDasVmYW7BCyDYa-0hqsK2hR0F6RczwqDJi33vyVPN2NCZN2B1exu8O4Cu2GAohw81YfEFsqLrmukbF1PFyRcChPQmNgfDMLjT-jqi23xwS4A9MQFhafv3ZC106pUwUI088qmAtTDMG2A8YEkMgVXbH7GlPFWGF6qkDUC0EcRJNRUTLNKBujllRvMaRbgi_3hDpthh-t8WRlsgs_j3kJFyv2LKO8eNhGvJ0fjM9Al-Ght7a3uIyTz15-x1aval7Ib_YrF52XVefBfmWZ5xXa9twL_hstD1lYgzSEvsQOlZNtfe374VCRdFwq0veOO7DJk2NG2zGHavsgM4FE");
+        header.append("Authorization", token);
 
-        new Request.Builder(this, Uri.parse("http://192.168.66.115/api/graphql"), new Query() {
+        this.uri = Uri.parse(baseUrl);
+
+        getMutation().setHeader(header)
+                .setTimeout(10)
+                .build()
+                .enqueue(new Callback() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "onResponse: " + response);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Log.i(TAG, "onFailure: ");
+                    }
+                });
+
+    }
+
+    // get Mutation Request Builder
+    public Request.Builder getMutation() {
+
+        return new Request.Builder(this, uri, new Mutation() {
 
             @Override
             public String[] getResponseFields() {
-                return new String[]{"id", "birthday", "username", "avatar"};
+                return new String[]{"id","pan"};
             }
 
             @Override
             public String getOperationName() {
-                return "Me";
+                return "CardRestore";
             }
 
-
-        })
-                .setHeader(header)
-                .setTimeout(10)
-                .build()
-                .enqueue(this);
-
+            @Override
+            public HashMap<String, ?> getRequestFields() {
+                HashMap<String, String> hm = new HashMap<>();
+                hm.put("id", "7");
+                return hm;
+            }
+        });
     }
 
+    // get Query Request Builder
+    public Request.Builder getQuery() {
 
-    @Override
-    public void onResponse(String response) {
-        Log.i("TAG", "onResponse: " + response);
-    }
+        CardModel cardModel = new CardModel();
 
-    @Override
-    public void onFailure() {
-
+        return new Request.Builder(this, uri, new Query(cardModel) {
+            @Override
+            public String getOperationName() {
+                return "Cards";
+            }
+        });
     }
 }
