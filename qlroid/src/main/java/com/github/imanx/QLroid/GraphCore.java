@@ -1,5 +1,11 @@
 package com.github.imanx.QLroid;
 
+import android.util.Log;
+
+import com.github.imanx.QLroid.annonations.UnInject;
+
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Native;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +47,9 @@ public abstract class GraphCore {
         List<Field>  fields = Arrays.asList(getModel().getClass().getDeclaredFields());
         List<String> result = new ArrayList<>();
         for (Field field : fields) {
+            if (field.getAnnotation(UnInject.class) != null) {
+                continue;
+            }
             result.add(field.getName());
         }
 
