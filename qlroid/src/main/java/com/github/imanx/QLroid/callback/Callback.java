@@ -1,4 +1,4 @@
-package com.github.imanx.QLroid;
+package com.github.imanx.QLroid.callback;
 
 /**
  * Created by ImanX.

@@ -1,1 +1,1 @@
-include ':app', ':qlroid'
+include ':sample', ':qlroid'

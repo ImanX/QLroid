@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.github.imanx.QLroid.Callback;
-import com.github.imanx.QLroid.Header;
+import com.github.imanx.QLroid.callback.Callback;
+import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
-import com.github.imanx.QLroid.Request;
+import com.github.imanx.QLroid.request.Request;
 
 import java.util.HashMap;
 

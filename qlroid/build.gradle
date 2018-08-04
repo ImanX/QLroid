@@ -3,9 +3,6 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 26
 
-    useLibrary 'org.apache.http.legacy'
-
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
@@ -29,7 +26,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     implementation 'com.zarinpal:httprequest:1.0.1'
-    compile 'org.codehaus.jettison:jettison:1.4.0'
+//    implementation 'org.codehaus.jettison:jettison:1.4.0'
 
 
 

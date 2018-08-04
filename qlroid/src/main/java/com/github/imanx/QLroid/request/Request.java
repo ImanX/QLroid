@@ -1,9 +1,13 @@
-package com.github.imanx.QLroid;
+package com.github.imanx.QLroid.request;
 
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.github.imanx.QLroid.GraphCore;
+import com.github.imanx.QLroid.Mutation;
+import com.github.imanx.QLroid.Query;
+import com.github.imanx.QLroid.callback.Callback;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
