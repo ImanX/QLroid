@@ -16,7 +16,6 @@ public class Query extends GraphCore {
 
     }
 
-
     public String getOperationName() {
         return null;
     }

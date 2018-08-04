@@ -2,6 +2,7 @@ package com.github.imanx.QLroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
@@ -130,6 +131,7 @@ public class Request {
 
                             @Override
                             public void onFailureResponse(int httpCode, String dataError) {
+                                Log.i("TAG", "onFailureResponse: "+httpCode+ " || "+dataError);
                                 if (callback != null) callback.onFailure();
                             }
                         });
