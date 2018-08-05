@@ -15,17 +15,17 @@ public class GraphModel {
     private StringBuilder builder = new StringBuilder();
 
 
-    public String getResponseModelName(){
+    public String getResponseModelName() {
         return this.getClass().getSimpleName();
     }
 
-    public String recyclerClasess(Class model) {
+    private String recycle(Class model) {
 
         Field[] fields = model.getDeclaredFields();
 
         if (model.getAnnotation(SerializeName.class) != null) {
             builder.append(((SerializeName) model.getAnnotation(SerializeName.class)).value());
-        }else{
+        } else {
             builder.append(model.getSimpleName());
         }
 
@@ -39,10 +39,16 @@ public class GraphModel {
 
         Class[] classList = model.getDeclaredClasses();
         for (Class clazz : classList) {
-            recyclerClasess(clazz);
+            recycle(clazz);
         }
         builder.append("}\n");
         return builder.toString();
     }
+
+
+    protected String buildQuery() {
+        return recycle(this.getClass());
+    }
+
 
 }

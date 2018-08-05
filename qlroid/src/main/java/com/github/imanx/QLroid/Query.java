@@ -23,7 +23,7 @@ public abstract class Query extends GraphCore {
 
         String query = "query { %s  %s { %s }}";
         // implementation reflection query
-        String queryString = "query { "+ getModel().recyclerClasess(getModel().getClass()) + "}";
+        String queryString = "query { " + getModel().buildQuery() + "}";
         return String.format(
                 query,
                 getModel() == null ? "" : getModel().getResponseModelName() + " : ",
@@ -31,7 +31,6 @@ public abstract class Query extends GraphCore {
                 getFields()
         );
     }
-
 
 
 }
