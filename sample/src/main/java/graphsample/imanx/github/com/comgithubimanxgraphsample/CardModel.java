@@ -40,4 +40,60 @@ public class CardModel extends GraphModel {
     public String getResponseModelName() {
         return "myCards";
     }
+
+    public class CardStatus extends GraphModel {
+        private String status;
+        private String name;
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public class CardItem extends GraphModel {
+            private String  item;
+            private boolean cardFlag;
+
+            public void setCardFlag(boolean cardFlag) {
+                this.cardFlag = cardFlag;
+            }
+
+            public void setItem(String item) {
+                this.item = item;
+            }
+
+            public String getItem() {
+                return item;
+            }
+
+            public boolean getCardStatus() {
+                return this.cardFlag;
+            }
+
+
+            public class EndClass extends GraphModel {
+                public double endField;
+
+                public void setEndField(double endField) {
+                    this.endField = endField;
+                }
+
+                public double getEndField() {
+                    return endField;
+                }
+            }
+
+        }
+    }
 }
