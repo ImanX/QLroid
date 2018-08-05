@@ -1,7 +1,5 @@
 package com.github.imanx.QLroid;
 
-import android.util.Log;
-
 import java.util.HashMap;
 
 /**

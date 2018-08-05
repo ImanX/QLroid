@@ -76,13 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
     // get Query Request Builder
     public Request.Builder getQuery() {
-
-        Me me = new Me();
-
-        return new Request.Builder(this, uri, new Query(me) {
+        return new Request.Builder(this, uri, new Query(new Me()) {
             @Override
             public String getOperationName() {
-                return "me";
+                return "Me";
             }
         });
     }

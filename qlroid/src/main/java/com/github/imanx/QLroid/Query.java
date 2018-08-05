@@ -1,6 +1,5 @@
 package com.github.imanx.QLroid;
 
-import android.util.Log;
 
 /**
  * Created by ImanX.
@@ -21,9 +20,10 @@ public abstract class Query extends GraphCore {
     @Override
     public String getQuery() {
 
+        if (getModel() != null) {
+            return "query { " + getModel().buildQuery() + "}";
+        }
         String query = "query { %s  %s { %s }}";
-        // implementation reflection query
-        String queryString = "query { " + getModel().buildQuery() + "}";
         return String.format(
                 query,
                 getModel() == null ? "" : getModel().getResponseModelName() + " : ",
