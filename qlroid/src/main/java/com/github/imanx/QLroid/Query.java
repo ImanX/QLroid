@@ -20,7 +20,9 @@ public abstract class Query extends GraphCore {
 
     @Override
     public String getQuery() {
+
         String query = "query { %s  %s { %s }}";
+        // implementation reflection query
         String queryString = "query { "+ getModel().recyclerClasess(getModel().getClass()) + "}";
         return String.format(
                 query,
