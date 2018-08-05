@@ -1,5 +1,10 @@
 package com.github.imanx.QLroid;
 
+import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.UnInject;
+
+import java.lang.reflect.Field;
+
 /**
  * Created by ImanX.
  * QLroid | Copyrights 2018 ZarinPal Crop.
@@ -7,7 +12,37 @@ package com.github.imanx.QLroid;
 
 public class GraphModel {
 
+    private StringBuilder builder = new StringBuilder();
+
+
     public String getResponseModelName(){
         return this.getClass().getSimpleName();
     }
+
+    public String recyclerClasess(Class model) {
+
+        Field[] fields = model.getDeclaredFields();
+
+        if (model.getAnnotation(SerializeName.class) != null) {
+            builder.append(((SerializeName) model.getAnnotation(SerializeName.class)).value());
+        }else{
+            builder.append(model.getSimpleName());
+        }
+
+        builder.append("{\n");
+        for (Field field : fields) {
+            if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
+                continue;
+            }
+            builder.append(field.getName()).append("\n");
+        }
+
+        Class[] classList = model.getDeclaredClasses();
+        for (Class clazz : classList) {
+            recyclerClasess(clazz);
+        }
+        builder.append("}\n");
+        return builder.toString();
+    }
+
 }

@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public HashMap<String, ?> getRequestFields() {
-                HashMap<String, String> hm = new HashMap<>();
-                hm.put("id", "7");
-                return hm;
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", "7");
+                return map;
             }
         });
     }
@@ -77,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
     // get Query Request Builder
     public Request.Builder getQuery() {
 
-        CardModel cardModel = new CardModel();
+        Me me = new Me();
 
-        return new Request.Builder(this, uri, new Query(cardModel) {
+        return new Request.Builder(this, uri, new Query(me) {
             @Override
             public String getOperationName() {
-                return "Cards";
+                return "me";
             }
         });
     }
