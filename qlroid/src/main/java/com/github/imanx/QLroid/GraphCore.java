@@ -2,6 +2,7 @@ package com.github.imanx.QLroid;
 
 import android.util.Log;
 
+import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 
 import java.lang.annotation.Annotation;

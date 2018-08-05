@@ -6,3 +6,6 @@
 /captures
 .externalNativeBuild
 /.idea/
+/.idea/misc.xml
+app/build/
+/.idea/inspectionProfiles/Project_Default.xml
