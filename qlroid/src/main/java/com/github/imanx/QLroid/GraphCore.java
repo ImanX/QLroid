@@ -2,6 +2,7 @@ package com.github.imanx.QLroid;
 
 
 import com.github.imanx.QLroid.annonations.UnInject;
+import com.github.imanx.QLroid.request.Argument;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ public abstract class GraphCore {
         return null;
     }
 
+    public Argument getArgument() {
+        return null;
+    }
 
     public String getFields() {
 

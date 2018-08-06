@@ -85,10 +85,14 @@ public class MainActivity extends AppCompatActivity {
 
     // get Query Request Builder
     public Request.Builder getQuery() {
-        return new Request.Builder(this, uri, new Query(new Me()) {
+        return new Request.Builder(this, uri, new Query(new Tickets()) {
             @Override
             public String getOperationName() {
-                return "Me";
+                return "Tickets";
+            }
+            @Override
+            public Argument getArgument() {
+                return new Argument().add("id", "1");
             }
         });
     }

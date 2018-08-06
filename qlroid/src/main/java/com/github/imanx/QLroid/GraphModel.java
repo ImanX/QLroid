@@ -1,7 +1,10 @@
 package com.github.imanx.QLroid;
 
+import android.support.annotation.Nullable;
+
 import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
+import com.github.imanx.QLroid.request.Argument;
 
 import java.lang.reflect.Field;
 
@@ -19,36 +22,47 @@ public class GraphModel {
         return this.getClass().getSimpleName();
     }
 
-    private String recycle(Class model) {
+    private String recycle(Class classes) {
 
-        Field[] fields = model.getDeclaredFields();
+        String className;
 
-        if (model.getAnnotation(SerializeName.class) != null) {
-            builder.append(((SerializeName) model.getAnnotation(SerializeName.class)).value());
+        if (classes.getAnnotation(SerializeName.class) != null) {
+            className = ((SerializeName) classes.getAnnotation(SerializeName.class)).value();
         } else {
-            builder.append(model.getSimpleName());
+            className = classes.getSimpleName();
         }
 
-        builder.append("{\n");
+        this.builder.append(className);
+
+        if (this.getClass() == classes) {
+            this.builder.append("%s");
+        }
+
+        this.builder.append("{\n");
+
+        Field[] fields = classes.getDeclaredFields();
+
         for (Field field : fields) {
             if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
                 continue;
             }
-            builder.append(field.getName()).append("\n");
+            this.builder.append(field.getName()).append("\n");
         }
 
-        Class[] classList = model.getDeclaredClasses();
+        Class[] classList = classes.getDeclaredClasses();
         for (Class clazz : classList) {
             recycle(clazz);
         }
-        builder.append("}\n");
-        return builder.toString();
+
+        this.builder.append("}\n");
+        return this.builder.toString();
     }
 
-
-    protected String buildQuery() {
-        return recycle(this.getClass());
+    protected String buildQuery(@Nullable Argument arg) {
+        String query = recycle(this.getClass());
+        if (arg != null) {
+            query = String.format(query, "(" + arg.getRaw() + ")");
+        }
+        return query;
     }
-
-
 }
