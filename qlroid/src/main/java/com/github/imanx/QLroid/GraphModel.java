@@ -24,29 +24,31 @@ public class GraphModel {
 
     private String recycle(Class classes) {
 
-        String className;
+        if (classes.getAnnotation(UnInject.class) == null) {
+            String className;
 
-        if (classes.getAnnotation(SerializeName.class) != null) {
-            className = ((SerializeName) classes.getAnnotation(SerializeName.class)).value();
-        } else {
-            className = classes.getSimpleName();
-        }
-
-        this.builder.append(className);
-
-        if (this.getClass() == classes) {
-            this.builder.append("%s");
-        }
-
-        this.builder.append("{\n");
-
-        Field[] fields = classes.getDeclaredFields();
-
-        for (Field field : fields) {
-            if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
-                continue;
+            if (classes.getAnnotation(SerializeName.class) != null) {
+                className = ((SerializeName) classes.getAnnotation(SerializeName.class)).value();
+            } else {
+                className = classes.getSimpleName();
             }
-            this.builder.append(field.getName()).append("\n");
+
+            this.builder.append(className);
+
+            if (this.getClass() == classes) {
+                this.builder.append("%s");
+            }
+
+            this.builder.append("{\n");
+
+            Field[] fields = classes.getDeclaredFields();
+
+            for (Field field : fields) {
+                if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
+                    continue;
+                }
+                this.builder.append(field.getName()).append("\n");
+            }
         }
 
         Class[] classList = classes.getDeclaredClasses();
@@ -54,7 +56,9 @@ public class GraphModel {
             recycle(clazz);
         }
 
-        this.builder.append("}\n");
+        if (classes.getAnnotation(UnInject.class) == null) {
+            this.builder.append("}\n");
+        }
         return this.builder.toString();
     }
 
