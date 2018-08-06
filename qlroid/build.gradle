@@ -23,11 +23,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation 'com.zarinpal:httprequest:1.0.1'
-//    implementation 'org.codehaus.jettison:jettison:1.4.0'
-
-
-
+    implementation 'com.android.support:support-annotations:27.1.1'
 }
