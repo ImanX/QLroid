@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.github.imanx.QLroid.callback.Callback;
+import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
@@ -31,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
         header.append("Authorization", token);
 
         this.uri = Uri.parse(baseUrl);
+
+        Argument argument = new Argument();
+        argument.add("id", 1);
+        argument.add("name", "name");
+
+        Log.i(TAG, "onCreate: " + argument.getValue("id", Integer.class));
+        Log.i(TAG, "onCreate: " + argument.getValue("name", String.class));
+        Log.i(TAG, "onCreate: " + argument.getRaw());
 
         getQuery()
                 .setHeader(header)
