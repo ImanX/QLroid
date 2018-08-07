@@ -65,8 +65,8 @@ public class GraphModel {
     protected String buildQuery(@Nullable Argument arg) {
         String query = recycle(this.getClass());
         if (arg != null) {
-            query = String.format(query, "(" + arg.getRaw() + ")");
+            return String.format(query, "(" + arg.getRaw() + ")");
         }
-        return query;
+        return query.replaceAll("%s", "");
     }
 }
