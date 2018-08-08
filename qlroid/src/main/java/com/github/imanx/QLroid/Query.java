@@ -7,14 +7,11 @@ package com.github.imanx.QLroid;
  * QLroid | Copyrights 2018 ZarinPal Crop.
  */
 
-public abstract class Query extends GraphCore {
+public abstract class Query<T extends GraphModel> extends GraphCore {
 
-    public Query(GraphModel model) {
-        super(model);
-    }
 
-    public Query() {
-        super(null);
+    public Query(T element) {
+        super(element);
     }
 
     @Override
@@ -36,6 +33,4 @@ public abstract class Query extends GraphCore {
                 getFields()
         );
     }
-
-
 }

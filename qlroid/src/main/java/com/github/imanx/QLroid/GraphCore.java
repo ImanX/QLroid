@@ -14,21 +14,25 @@ import java.util.List;
  * QLroid | Copyrights 2018 ZarinPal Crop.
  */
 
-public abstract class GraphCore {
+public abstract class GraphCore<T extends GraphModel> {
 
-    private GraphModel model;
+    private T element;
 
-    public GraphCore(GraphModel model) {
-        this.model = model;
+    public GraphCore(T element) {
+        this.element = element;
     }
 
-    protected GraphModel getModel() {
-        return this.model;
+    protected T getModel() {
+        return this.element;
     }
 
     public abstract String getQuery();
 
     public abstract String getOperationName();
+
+    public T getResponseFields(T t) {
+        return null;
+    }
 
 
     public String[] getResponseFields() {

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.Mutation;
@@ -17,13 +18,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG_A";
 
-    private static final String baseUrl = "http://192.168.66.115/api/graphql";
+    private static String baseUrl = "http://192.168.66.115/api/graphql";
     private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        baseUrl = "http://91.239.55.205:8080/api/graphql";
 
         final TextView txt = findViewById(R.id.txt);
 
@@ -82,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public String getOperationName() {
                 return "TicketDepartments";
+            }
+
+            @Override
+            public GraphModel getResponseFields(GraphModel model) {
+                return super.getResponseFields(model);
             }
         });
     }
