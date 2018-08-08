@@ -7,7 +7,7 @@ package com.github.imanx.QLroid;
  * QLroid | Copyrights 2018 ZarinPal Crop.
  */
 
-public abstract class Query<T extends GraphModel> extends GraphCore {
+public abstract class Query<T extends GraphModel> extends GraphCore<T> {
 
 
     public Query(T element) {

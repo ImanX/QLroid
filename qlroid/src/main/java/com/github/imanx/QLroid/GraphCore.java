@@ -30,7 +30,7 @@ public abstract class GraphCore<T extends GraphModel> {
 
     public abstract String getOperationName();
 
-    public T getResponseFields(T t) {
+    public String[] getResponseFields(T t) {
         return null;
     }
 
