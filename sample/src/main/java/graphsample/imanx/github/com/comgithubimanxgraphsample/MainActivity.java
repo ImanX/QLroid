@@ -85,12 +85,6 @@ public class MainActivity extends AppCompatActivity {
     public Request.Builder getQuery() {
         return new Request.Builder(this, uri, new Query<TicketDepartments>(new TicketDepartments()) {
             @Override
-            public String[] getResponseFields(TicketDepartments ticketDepartments) {
-                //TODO :  return String[] or Object or  ...
-                return null;
-            }
-
-            @Override
             public String getOperationName() {
                 return "TicketDepartments";
             }
