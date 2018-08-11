@@ -2,6 +2,7 @@ package com.github.imanx.QLroid.request;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.github.imanx.QLroid.GraphCore;
@@ -9,6 +10,7 @@ import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
@@ -137,21 +139,9 @@ public class Request {
                                 if (callback == null) {
                                     return;
                                 }
-
-                                try {
-
-                                    JSONObject object = jsonObject.getJSONObject("data");
-                                    JSONArray  array  = object.getJSONArray(builder.graphCore.getOperationName());
-                                    JSONObject aa     = (JSONObject) array.get(0);
-
-                                    callback.onResponse(new GsonBuilder()
-                                            .create()
-                                            .fromJson(aa.toString(), aClass));
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
+                                callback.onResponse(new GsonBuilder()
+                                        .create()
+                                        .fromJson(getStrJson(jsonObject), aClass));
                             }
 
                             @Override
@@ -165,6 +155,39 @@ public class Request {
             }
 
         }).start();
+
+    }
+
+    private String getStrJson(@Nullable JSONObject jsonObject) {
+
+        if (jsonObject == null) {
+            return "";
+        }
+
+        JSONObject optJsonObject;
+
+        try {
+            jsonObject = jsonObject.getJSONObject("data");
+
+            JSONArray optJSONArray = jsonObject.optJSONArray(this.builder.graphCore.getOperationName());
+
+            if (optJSONArray != null) {
+                return optJSONArray.toString();
+            }
+
+
+            optJsonObject = jsonObject.getJSONObject(this.builder.graphCore.getOperationName());
+            if (optJsonObject != null) {
+                return optJsonObject.toString();
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+
 
     }
 
