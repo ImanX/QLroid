@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.ParameterizedType;
+
 
 /**
  * Created by ImanX.
@@ -139,6 +141,8 @@ public class Request {
                                 if (callback == null) {
                                     return;
                                 }
+
+                                Log.i("TAG_A", "0o0 : "+aClass.getSimpleName());
                                 callback.onResponse(new GsonBuilder()
                                         .create()
                                         .fromJson(getStrJson(jsonObject), aClass));

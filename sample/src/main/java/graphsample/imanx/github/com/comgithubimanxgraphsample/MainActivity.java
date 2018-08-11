@@ -1,5 +1,6 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,26 +32,37 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView txt = findViewById(R.id.txt);
 
+
         String token  = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjI4MGZiNzlmYTE1NzIyNzI4ZGI4YzJmYTkxZGRkN2MwNmQ1OWZkZGI3YTg2YmEzZTY4ZDkxNjc4NTEyYmE3ZjcyMGFlZTcxMTBjYTBkZjg1In0.eyJhdWQiOiIxIiwianRpIjoiMjgwZmI3OWZhMTU3MjI3MjhkYjhjMmZhOTFkZGQ3YzA2ZDU5ZmRkYjdhODZiYTNlNjhkOTE2Nzg1MTJiYTdmNzIwYWVlNzExMGNhMGRmODUiLCJpYXQiOjE1MzM3MTg0MjAsIm5iZiI6MTUzMzcxODQyMCwiZXhwIjoxNTY1MjU0NDIwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.cu4KNY7rnDgXnIiIZX0Odi2u26eKOwVNfy5G35cXzpQ0oD-0ecnBX1sLIXTriteu7sCo5xBB0lm-ZB7KVzHXF2wIEHas5vEXCBe9BF94OQ7DFSQCWhP8ZoZAHx0hlxDtCrfuKVh4KPPc9PrKTG7uI5TDG511cNK769aJ6kC_lRM9tmYRKaU1GI2JrDr7TCoTjVx6mCT0tUKyHbLqr2CMXWzNcQFdTRUkWkFuJUAdrDzNz4Hmeawp4ER9iR-uBshRw-48a1ebSfK5akOUH61ptxBvrvrHvhEyJMQmJ4FIq-rgPTSMVHseXB4tosxqxgNTqgXTkonR0YdfPjDnBqAzymejCGPbZJ5j3xDBAodNIQ4rOq8Nec8DFeruwEgTcFVCBA5BB0NlU_BKIx8BfMI6MW1jx2JWTmHjGUIJpqGYB0ZphdwW0_yqxCeJoWVvdgtoeqDDusNXU6ei4JJmDbXo9RYQe3CoP9zke3rTT0xlegQ-7ufRUgD9cLE1mztu_WaC7PvP_9Abvxj5YCF9dQGF6V1sgY627RDYnGlCYogPr041Vdg7DxlqJsTTdGoTH8a8HrM7knTHF-qfdJztC8_n9az7aNa6VEYWe2v1iTaJugT-uk3NiIiau6EYkJ0yjaaLgkEnsExYEml_JpX9WLztdO2ENRPT3KWHKSjc01J2Va0";
         Header header = new Header();
         header.append("Authorization", token);
 
-        this.uri = Uri.parse(baseUrl);
+        Uri uri = Uri.parse(baseUrl);
 
-        getQuery()
-                .setHeader(header)
+        Request.Builder builder = new Request.Builder(this, uri, new Query() {
+            @Override
+            public String getOperationName() {
+                return "TicketDepartments";
+            }
+
+            @Override
+            public String[] getResponseFields() {
+                return new String[]{"title"};
+            }
+        });
+
+        builder.setHeader(header)
                 .setTimeout(10)
                 .build()
                 .enqueue(new Callback<List<TicketDepartments>>() {
                     @Override
                     public void onResponse(List<TicketDepartments> response) {
-
-                        Log.i("AAA", "onResponse: ho ho ha ha" + response.size());
+                        txt.setText("response Ok");
                     }
 
                     @Override
                     public void onFailure() {
-                        Log.i("AAA", "onFailure: shit ");
+                        txt.setText("response failure");
                     }
 
                 }, List.class);
@@ -60,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     // get Mutation Request Builder
     public Request.Builder getMutation() {
 
-        return new Request.Builder(this, uri, new Mutation() {
+        return new Request.Builder(this, Uri.parse(baseUrl), new Mutation() {
 
             @Override
             public String[] getResponseFields() {
@@ -77,21 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("id", "13");
                 return map;
-            }
-        });
-    }
-
-    // get Query Request Builder
-    public Request.Builder getQuery() {
-        return new Request.Builder(this, uri, new Query<TicketDepartments>(new TicketDepartments()) {
-            @Override
-            public String getOperationName() {
-                return "TicketDepartments";
-            }
-
-            @Override
-            public String[] getResponseFields() {
-                return new String[]{"title"};
             }
         });
     }
