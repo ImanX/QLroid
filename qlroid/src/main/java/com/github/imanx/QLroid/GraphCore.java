@@ -22,7 +22,7 @@ public abstract class GraphCore<T extends GraphModel> {
         this.element = element;
     }
 
-    protected T getModel() {
+    public T getModel() {
         return this.element;
     }
 

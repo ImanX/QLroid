@@ -3,9 +3,9 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
-import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.Mutation;
@@ -13,6 +13,7 @@ import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.request.Request;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,12 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        baseUrl = "http://91.239.55.205:8080/api/graphql";
+//        baseUrl = "http://91.239.55.205:8080/api/graphql";
 
         final TextView txt = findViewById(R.id.txt);
 
-        String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImMxMTZhMzIyNGYxOTFhMjcwMjFjZDU2ZDZmZTBiZjkyNjJmOTBkNWEzNGZjMGRlZjE2MzI1YjRmNjdkYTI4NWFiYWViNjVjYjM0NGQ1MGMzIn0.eyJhdWQiOiIxIiwianRpIjoiYzExNmEzMjI0ZjE5MWEyNzAyMWNkNTZkNmZlMGJmOTI2MmY5MGQ1YTM0ZmMwZGVmMTYzMjViNGY2N2RhMjg1YWJhZWI2NWNiMzQ0ZDUwYzMiLCJpYXQiOjE1MzMzNjIxMzAsIm5iZiI6MTUzMzM2MjEzMCwiZXhwIjoxNTY0ODk4MTMwLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.fLR7YlfFWis7y3HHPS8svK3hPeTkJ3PoFbFQR0MCD7Ids764OyUgqZeGxp8ASbEktSvqAEpcAOr9zO9DgL71HR3a6Pgd_Nrlv3RVV1CEzkAOjdBKGFSLeDSwT8cnCaOrYMrUjzXJV1CMjpDtXuR1CNPOVfVkKL9l6sXrbzoHuyXDeharv5h0DkkdtEfFP3_UhdGYHDjDfx4bDcBDKLWa7zdwMsJ9BnyLPVIEXlfUDlHkUjXbX17FqIN-XKvWuzKnRSr82ic6dhQABLmRsQZGa-1CgovP2rRK1_RNMwNoVQnAtMH55HFYC2Hjsu4RsSkThavpkUCFjYCU1lTNDi8qt1AzUGrIanX69dCYhJ946pyml7eNUDqA4TjFq3DuY7Kxa6UqauAJ3Jq4HoJ_ek7F9CGaFsvBg3Q7GgIwew46UuiKiChp4R0_0D0k5zNDmgkA_tKYx9dxtB6TXsX7v7dMtQz6wKtg8FqPfR6MNeAPGZqBmvvYNQ-CrzZWB69nKZCg6iDi5rmbCZXBiCWBk-MGH9VeO7vuSOaKlMJG-ccqqv89bYg3DQKAaJEWR-PSJKCfTvp6kH6pCn9X-gxF2fWsYionBHWwAzagMpRek_odbeQnAgjMpzKYZv8KwCVtq7sGB209XnWdfk17fvZJrknmK_5taArM0AesbBeUuLRKTO4";
-
+        String token  = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjI4MGZiNzlmYTE1NzIyNzI4ZGI4YzJmYTkxZGRkN2MwNmQ1OWZkZGI3YTg2YmEzZTY4ZDkxNjc4NTEyYmE3ZjcyMGFlZTcxMTBjYTBkZjg1In0.eyJhdWQiOiIxIiwianRpIjoiMjgwZmI3OWZhMTU3MjI3MjhkYjhjMmZhOTFkZGQ3YzA2ZDU5ZmRkYjdhODZiYTNlNjhkOTE2Nzg1MTJiYTdmNzIwYWVlNzExMGNhMGRmODUiLCJpYXQiOjE1MzM3MTg0MjAsIm5iZiI6MTUzMzcxODQyMCwiZXhwIjoxNTY1MjU0NDIwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.cu4KNY7rnDgXnIiIZX0Odi2u26eKOwVNfy5G35cXzpQ0oD-0ecnBX1sLIXTriteu7sCo5xBB0lm-ZB7KVzHXF2wIEHas5vEXCBe9BF94OQ7DFSQCWhP8ZoZAHx0hlxDtCrfuKVh4KPPc9PrKTG7uI5TDG511cNK769aJ6kC_lRM9tmYRKaU1GI2JrDr7TCoTjVx6mCT0tUKyHbLqr2CMXWzNcQFdTRUkWkFuJUAdrDzNz4Hmeawp4ER9iR-uBshRw-48a1ebSfK5akOUH61ptxBvrvrHvhEyJMQmJ4FIq-rgPTSMVHseXB4tosxqxgNTqgXTkonR0YdfPjDnBqAzymejCGPbZJ5j3xDBAodNIQ4rOq8Nec8DFeruwEgTcFVCBA5BB0NlU_BKIx8BfMI6MW1jx2JWTmHjGUIJpqGYB0ZphdwW0_yqxCeJoWVvdgtoeqDDusNXU6ei4JJmDbXo9RYQe3CoP9zke3rTT0xlegQ-7ufRUgD9cLE1mztu_WaC7PvP_9Abvxj5YCF9dQGF6V1sgY627RDYnGlCYogPr041Vdg7DxlqJsTTdGoTH8a8HrM7knTHF-qfdJztC8_n9az7aNa6VEYWe2v1iTaJugT-uk3NiIiau6EYkJ0yjaaLgkEnsExYEml_JpX9WLztdO2ENRPT3KWHKSjc01J2Va0";
         Header header = new Header();
         header.append("Authorization", token);
 
@@ -41,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
                 .setHeader(header)
                 .setTimeout(10)
                 .build()
-                .enqueue(new Callback() {
+                .enqueue(new Callback<List<TicketDepartments>>() {
                     @Override
-                    public void onResponse(String response) {
-                        txt.setText("response : " + response);
+                    public void onResponse(List<TicketDepartments> response) {
+
+                        Log.i("AAA", "onResponse: ho ho ha ha" + response.size());
                     }
 
                     @Override
                     public void onFailure() {
-                        txt.setText("Error :(");
+                        Log.i("AAA", "onFailure: shit ");
                     }
-                });
+
+                }, List.class);
 
     }
 
@@ -93,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 return "TicketDepartments";
             }
 
+            @Override
+            public String[] getResponseFields() {
+                return new String[]{"title"};
+            }
         });
     }
 }

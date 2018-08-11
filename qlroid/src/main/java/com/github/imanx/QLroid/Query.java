@@ -1,6 +1,7 @@
 package com.github.imanx.QLroid;
 
 
+import java.util.List;
 
 /**
  * Created by ImanX.
@@ -11,6 +12,7 @@ public abstract class Query<T extends GraphModel> extends GraphCore<T> {
 
 
     public Query(T element) {
+
         super(element);
     }
 

@@ -8,9 +8,11 @@ import com.github.imanx.QLroid.GraphCore;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
+import com.google.gson.GsonBuilder;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,14 +26,16 @@ public class Request {
 
     private Builder  builder;
     private Callback callback;
+    private Class<?> aClass;
 
     private Request(Builder builder) {
         this.builder = builder;
     }
 
 
-    public void enqueue(Callback callback) {
+    public void enqueue(Callback callback, Class<?> clazz) {
         this.callback = callback;
+        this.aClass = clazz;
         enqueue();
     }
 
@@ -129,12 +133,30 @@ public class Request {
                         .get(new OnCallbackRequestListener() {
                             @Override
                             public void onSuccessResponse(JSONObject jsonObject, String content) {
-                                if (callback != null) callback.onResponse(content);
+
+                                if (callback == null) {
+                                    return;
+                                }
+
+                                try {
+
+                                    JSONObject object = jsonObject.getJSONObject("data");
+                                    JSONArray  array  = object.getJSONArray(builder.graphCore.getOperationName());
+                                    JSONObject aa     = (JSONObject) array.get(0);
+
+                                    callback.onResponse(new GsonBuilder()
+                                            .create()
+                                            .fromJson(aa.toString(), aClass));
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
 
                             @Override
                             public void onFailureResponse(int httpCode, String dataError) {
-                                Log.i("TAG", "onFailureResponse: "+httpCode+ " || "+dataError);
+                                Log.i("TAG", "onFailureResponse: " + httpCode + " || " + dataError);
                                 if (callback != null) callback.onFailure();
                             }
                         });
@@ -160,7 +182,7 @@ public class Request {
         public Builder(Context context, Uri uri, Query query) {
             this.uri = uri;
             this.graphCore = query;
-            this.context =context;
+            this.context = context;
         }
 
         public Builder(Context context, Uri uri, Mutation mutation) {

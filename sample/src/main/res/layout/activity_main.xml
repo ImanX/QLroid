@@ -12,10 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:lineSpacingExtra="10dp"
         android:padding="20dp"
-        android:textStyle="normal"
-        android:textSize="12sp"
+        android:text="Loading..."
         android:textColor="#484848"
-        android:text="Loading..." />
+        android:textSize="14sp"
+        android:textStyle="normal" />
 
 </LinearLayout>
