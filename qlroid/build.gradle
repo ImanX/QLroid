@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 26
@@ -20,6 +22,56 @@ android {
         }
     }
 
+}
+
+
+group = 'com.zarinpal'
+version = '0.0.1'
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+task generateJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath()
+            .join(File.pathSeparator))
+}
+
+task generateJavadocsJar(type: Jar) {
+    from generateJavadocs.destinationDir
+    classifier 'javadoc'
+}
+
+generateJavadocsJar.dependsOn generateJavadocs
+
+artifacts {
+    archives generateJavadocsJar
+    archives generateSourcesJar
+}
+
+bintray {
+    user = 'xxxxxx'
+    key = 'xxxxx'
+    pkg {
+
+        repo = 'lib'
+        name = 'QLroid'
+        userOrg = 'zarinpali'
+
+        version {
+            name = '0.0.1'
+            desc = 'An Android GraphQL Client'
+            released = new Date()
+            vcsTag = '0.0.1'
+        }
+
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/ImanX/QLroid'
+        websiteUrl = 'https://github.com/ImanX/QLroid'
+    }
+    configurations = ['archives']
 }
 
 dependencies {
