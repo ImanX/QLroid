@@ -12,7 +12,6 @@ import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 .enqueue(new Callback<Me>() {
                     @Override
                     public void onResponse(Me response) {
-                        txt.setText("response Ok size " + response.getAddresses().get(0).getType());
+                        txt.setText("response Ok");
                     }
 
                     @Override

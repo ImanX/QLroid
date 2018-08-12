@@ -10,7 +10,6 @@ import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
@@ -47,9 +46,9 @@ public class Request {
             @Override
             public void run() {
 
-                String     aa         = builder.getGraphCore().getQuery();
+                String aa = builder.getGraphCore().getQuery();
 
-                Log.i("TAG_AA", "run: "+aa);
+                Log.i("TAG_AA", "run: " + aa);
 
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -198,82 +197,4 @@ public class Request {
             return timeout;
         }
     }
-
-    /*
-
-    private void requestHttpUrlConnection(){
-
-                try {
-
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(builder.getUri().toString()).openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
-                    httpURLConnection.setRequestProperty("Accept", "application/json");
-                    // httpURLConnection.setRequestProperty("Authorization", "bearer 89c084087df48df1d2d42e561bcd941936743926");
-
-
-                    if (builder.getHeader() != null) {
-                        for (Header.Entity entity : builder.getHeader().getEntity()) {
-                            httpURLConnection.addRequestProperty(entity.getField(), entity.getDescription());
-                        }
-                    }
-
-                    httpURLConnection.connect();
-
-
-
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("operationName", null);
-                        jsonObject.put("query", builder.getGraphCore().getQuery());
-                        jsonObject.put("variable", "{}");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    String str = jsonObject.toString();
-                    Log.i("TAG", "run: " + str);
-                    byte[]       outputInBytes = str.getBytes("UTF-8");
-                    OutputStream os            = httpURLConnection.getOutputStream();
-                    os.write(outputInBytes);
-                    os.close();
-
-
-                    int a = httpURLConnection.getResponseCode();
-                    Log.i("TAG", "run: " + a);
-
-
-//                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getErrorStream()));
-//                    StringBuilder  builder = new StringBuilder();
-//                    String         lines;
-//                    while ((lines = reader.readLine()) != null) {
-//                        builder.append(lines + "\n");
-//                    }
-
-                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                    StringBuilder  builder = new StringBuilder();
-                    String         lines;
-                    while ((lines = reader.readLine()) != null) {
-                        builder.append(lines + "\n");
-                    }
-
-
-                    Log.i("TAG", "run: " + builder.toString());
-
-                    reader.close();
-
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-    }
-    */
-
-
 }
