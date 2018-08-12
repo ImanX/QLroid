@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 
 /**
@@ -30,16 +30,14 @@ public class Request {
 
     private Builder  builder;
     private Callback callback;
-    private Class<?> aClass;
 
     private Request(Builder builder) {
         this.builder = builder;
     }
 
 
-    public void enqueue(Callback callback, Class<?> clazz) {
+    public void enqueue(Callback callback) {
         this.callback = callback;
-        this.aClass = clazz;
         enqueue();
     }
 
@@ -49,80 +47,14 @@ public class Request {
             @Override
             public void run() {
 
-//                try {
-//
-//                    HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(builder.getUri().toString()).openConnection();
-//                    httpURLConnection.setRequestMethod("POST");
-//                    httpURLConnection.setDoOutput(true);
-//                    httpURLConnection.setDoInput(true);
-//                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
-//                    httpURLConnection.setRequestProperty("Accept", "application/json");
-//                    // httpURLConnection.setRequestProperty("Authorization", "bearer 89c084087df48df1d2d42e561bcd941936743926");
-//
-//
-//                    if (builder.getHeader() != null) {
-//                        for (Header.Entity entity : builder.getHeader().getEntity()) {
-//                            httpURLConnection.addRequestProperty(entity.getField(), entity.getDescription());
-//                        }
-//                    }
-//
-//                    httpURLConnection.connect();
-//
-//
-//
-//                    JSONObject jsonObject = new JSONObject();
-//                    try {
-//                        jsonObject.put("operationName", null);
-//                        jsonObject.put("query", builder.getGraphCore().getQuery());
-//                        jsonObject.put("variable", "{}");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    String str = jsonObject.toString();
-//                    Log.i("TAG", "run: " + str);
-//                    byte[]       outputInBytes = str.getBytes("UTF-8");
-//                    OutputStream os            = httpURLConnection.getOutputStream();
-//                    os.write(outputInBytes);
-//                    os.close();
-//
-//
-//                    int a = httpURLConnection.getResponseCode();
-//                    Log.i("TAG", "run: " + a);
-//
-//
-////                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getErrorStream()));
-////                    StringBuilder  builder = new StringBuilder();
-////                    String         lines;
-////                    while ((lines = reader.readLine()) != null) {
-////                        builder.append(lines + "\n");
-////                    }
-//
-//                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-//                    StringBuilder  builder = new StringBuilder();
-//                    String         lines;
-//                    while ((lines = reader.readLine()) != null) {
-//                        builder.append(lines + "\n");
-//                    }
-//
-//
-//                    Log.i("TAG", "run: " + builder.toString());
-//
-//                    reader.close();
-//
-//
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
+                String     aa         = builder.getGraphCore().getQuery();
 
+                Log.i("TAG_AA", "run: "+aa);
 
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("operationName", null);
-                    jsonObject.put("query", builder.getGraphCore().getQuery());
+                    jsonObject.put("query", aa);
                     jsonObject.put("variable", "{}");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -142,10 +74,13 @@ public class Request {
                                     return;
                                 }
 
-                                Log.i("TAG_A", "0o0 : "+aClass.getSimpleName());
+                                String json = getStrJson(jsonObject);
+
+                                Class<?> clazzz = isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
+
                                 callback.onResponse(new GsonBuilder()
                                         .create()
-                                        .fromJson(getStrJson(jsonObject), aClass));
+                                        .fromJson(json, clazzz));
                             }
 
                             @Override
@@ -160,6 +95,16 @@ public class Request {
 
         }).start();
 
+    }
+
+    private boolean isJsonObject(String json) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            return true;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private String getStrJson(@Nullable JSONObject jsonObject) {
@@ -253,6 +198,82 @@ public class Request {
             return timeout;
         }
     }
+
+    /*
+
+    private void requestHttpUrlConnection(){
+
+                try {
+
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(builder.getUri().toString()).openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                    httpURLConnection.setRequestProperty("Accept", "application/json");
+                    // httpURLConnection.setRequestProperty("Authorization", "bearer 89c084087df48df1d2d42e561bcd941936743926");
+
+
+                    if (builder.getHeader() != null) {
+                        for (Header.Entity entity : builder.getHeader().getEntity()) {
+                            httpURLConnection.addRequestProperty(entity.getField(), entity.getDescription());
+                        }
+                    }
+
+                    httpURLConnection.connect();
+
+
+
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("operationName", null);
+                        jsonObject.put("query", builder.getGraphCore().getQuery());
+                        jsonObject.put("variable", "{}");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    String str = jsonObject.toString();
+                    Log.i("TAG", "run: " + str);
+                    byte[]       outputInBytes = str.getBytes("UTF-8");
+                    OutputStream os            = httpURLConnection.getOutputStream();
+                    os.write(outputInBytes);
+                    os.close();
+
+
+                    int a = httpURLConnection.getResponseCode();
+                    Log.i("TAG", "run: " + a);
+
+
+//                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getErrorStream()));
+//                    StringBuilder  builder = new StringBuilder();
+//                    String         lines;
+//                    while ((lines = reader.readLine()) != null) {
+//                        builder.append(lines + "\n");
+//                    }
+
+                    BufferedReader reader  = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    StringBuilder  builder = new StringBuilder();
+                    String         lines;
+                    while ((lines = reader.readLine()) != null) {
+                        builder.append(lines + "\n");
+                    }
+
+
+                    Log.i("TAG", "run: " + builder.toString());
+
+                    reader.close();
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+    }
+    */
 
 
 }

@@ -1,16 +1,14 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.github.imanx.QLroid.callback.Callback;
-import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
+import com.github.imanx.QLroid.callback.Callback;
+import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
 import java.util.HashMap;
@@ -21,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG_A";
 
     private static String baseUrl = "http://192.168.66.115/api/graphql";
-    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,25 +36,21 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        Request.Builder builder = new Request.Builder(this, uri, new Query() {
+        Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
             @Override
             public String getOperationName() {
-                return "TicketDepartments";
+                return "Me";
             }
 
-            @Override
-            public String[] getResponseFields() {
-                return new String[]{"title"};
-            }
         });
 
         builder.setHeader(header)
                 .setTimeout(10)
                 .build()
-                .enqueue(new Callback<List<TicketDepartments>>() {
+                .enqueue(new Callback<Me>() {
                     @Override
-                    public void onResponse(List<TicketDepartments> response) {
-                        txt.setText("response Ok");
+                    public void onResponse(Me response) {
+                        txt.setText("response Ok size " + response.getAddresses().get(0).getType());
                     }
 
                     @Override
@@ -65,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         txt.setText("response failure");
                     }
 
-                }, List.class);
+                });
 
     }
 
