@@ -1,7 +1,5 @@
 package com.github.imanx.QLroid;
 
-
-
 /**
  * Created by ImanX.
  * QLroid | Copyrights 2018 ZarinPal Crop.
@@ -9,8 +7,9 @@ package com.github.imanx.QLroid;
 
 public abstract class Query extends GraphCore {
 
-    public Query(GraphModel model) {
-        super(model);
+
+    public Query(GraphModel element) {
+        super(element);
     }
 
     public Query() {
@@ -36,6 +35,4 @@ public abstract class Query extends GraphCore {
                 getFields()
         );
     }
-
-
 }

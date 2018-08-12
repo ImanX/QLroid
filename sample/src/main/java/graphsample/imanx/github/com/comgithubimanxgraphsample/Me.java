@@ -4,6 +4,8 @@ import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 
+import java.util.List;
+
 public class Me extends GraphModel {
 
 
@@ -12,6 +14,9 @@ public class Me extends GraphModel {
     private String avatar;
     @UnInject
     private String userLevelUp;
+
+    @UnInject
+    private List<Addresses> addresses;
 
 
     public String getEmail() {
@@ -38,27 +43,26 @@ public class Me extends GraphModel {
         this.userLevelUp = userLevelUp;
     }
 
-    @SerializeName("fee_group")
-    public class FeeGroup extends GraphModel {
-
-        private String name;
-        private int    percent;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getPercent() {
-            return percent;
-        }
-
-        public void setPercent(int percent) {
-            this.percent = percent;
-        }
+    public void setAddresses(List<Addresses> addresses) {
+        this.addresses = addresses;
     }
 
+    public List<Addresses> getAddresses() {
+        return addresses;
+    }
+
+    @SerializeName("addresses")
+    public class Addresses extends GraphModel {
+
+        private String address;
+        private String type;
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getType() {
+            return type;
+        }
+    }
 }

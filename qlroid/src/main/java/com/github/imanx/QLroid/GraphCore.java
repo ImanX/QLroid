@@ -16,14 +16,17 @@ import java.util.List;
 
 public abstract class GraphCore {
 
-    private GraphModel model;
+    private GraphModel element;
 
-    public GraphCore(GraphModel model) {
-        this.model = model;
+    public GraphCore(GraphModel element) {
+        this.element = element;
     }
 
-    protected GraphModel getModel() {
-        return this.model;
+    public GraphCore() {
+    }
+
+    public GraphModel getModel() {
+        return this.element;
     }
 
     public abstract String getQuery();
