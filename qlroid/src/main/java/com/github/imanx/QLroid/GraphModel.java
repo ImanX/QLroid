@@ -47,7 +47,15 @@ public class GraphModel {
                 if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
                     continue;
                 }
-                this.builder.append(field.getName()).append("\n");
+
+                String fieldName;
+
+                if (field.getAnnotation(SerializeName.class) != null) {
+                    fieldName = (field.getAnnotation(SerializeName.class)).value();
+                } else {
+                    fieldName = field.getName();
+                }
+                this.builder.append(fieldName).append("\n");
             }
         }
 
