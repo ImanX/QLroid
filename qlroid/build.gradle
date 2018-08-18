@@ -26,7 +26,7 @@ android {
 
 
 group = 'com.zarinpal'
-version = '0.0.1'
+version = '0.0.2'
 
 task generateSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -52,8 +52,8 @@ artifacts {
 }
 
 bintray {
-    user = 'xxxxxx'
-    key = 'xxxxx'
+    user = 'xxxx'
+    key = 'xxxx'
     pkg {
 
         repo = 'lib'
@@ -61,10 +61,10 @@ bintray {
         userOrg = 'zarinpali'
 
         version {
-            name = '0.0.1'
+            name = version
             desc = 'An Android GraphQL Client'
             released = new Date()
-            vcsTag = '0.0.1'
+            vcsTag = version
         }
 
         licenses = ['Apache-2.0']
