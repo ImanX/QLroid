@@ -12,6 +12,7 @@ import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
+        Request.Builder builder = new Request.Builder(this, uri, new Query(new TicketDepartments()) {
             @Override
             public String getOperationName() {
-                return "Me";
+                return "TicketDepartments";
             }
 
         });
@@ -46,19 +47,17 @@ public class MainActivity extends AppCompatActivity {
         builder.setHeader(header)
                 .setTimeout(10)
                 .build()
-                .enqueue(new Callback<Me>() {
+                .enqueue(new Callback<List<TicketDepartments>>() {
                     @Override
-                    public void onResponse(Me response) {
-                        txt.setText("response Ok");
+                    public void onResponse(List<TicketDepartments> response) {
+                        txt.setText("response Ok " + response.get(0));
                     }
 
                     @Override
                     public void onFailure() {
                         txt.setText("response failure");
                     }
-
                 });
-
     }
 
     // get Mutation Request Builder

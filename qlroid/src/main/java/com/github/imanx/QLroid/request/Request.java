@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,12 +51,10 @@ public class Request {
             @Override
             public void run() {
 
-                String aa = builder.getGraphCore().getQuery();
-
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("operationName", null);
-                    jsonObject.put("query", aa);
+                    jsonObject.put("query", builder.getGraphCore().getQuery());
                     jsonObject.put("variable", "{}");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -77,11 +76,11 @@ public class Request {
 
                                 String json = getStrJson(jsonObject);
 
-                                Class<?> clazzz = isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
+                                Class<?> clazz = isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
 
                                 callback.onResponse(new GsonBuilder()
                                         .create()
-                                        .fromJson(json, clazzz));
+                                        .fromJson(json, clazz));
                             }
 
                             @Override
@@ -90,8 +89,6 @@ public class Request {
                                 if (callback != null) callback.onFailure();
                             }
                         });
-
-
             }
 
         }).start();

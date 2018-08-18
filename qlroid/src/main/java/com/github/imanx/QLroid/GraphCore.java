@@ -1,6 +1,7 @@
 package com.github.imanx.QLroid;
 
 
+import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.request.Argument;
 
@@ -54,7 +55,11 @@ public abstract class GraphCore {
             if (field.getAnnotation(UnInject.class) != null) {
                 continue;
             }
-            result.add(field.getName());
+            String fieldName = field.getName();
+            if (field.getAnnotation(SerializeName.class) != null) {
+                fieldName = (field.getAnnotation(SerializeName.class)).value();
+            }
+            result.add(fieldName);
         }
 
         return wrap(result);
