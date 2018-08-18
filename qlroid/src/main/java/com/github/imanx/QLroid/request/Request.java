@@ -42,13 +42,15 @@ public class Request {
 
     public void enqueue() {
 
+        if (this.builder.graphCore == null) {
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 String aa = builder.getGraphCore().getQuery();
-
-                Log.i("TAG_AA", "run: " + aa);
 
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -136,7 +138,6 @@ public class Request {
 
         return "";
 
-
     }
 
 
@@ -162,6 +163,16 @@ public class Request {
             this.context = context;
         }
 
+        public Builder(Context context, Uri uri) {
+            this.uri = uri;
+            this.context = context;
+        }
+
+        public Builder setGraph(GraphCore graph) {
+            this.graphCore = graph;
+            return this;
+        }
+
         public Builder setHeader(Header header) {
             this.header = header;
             return this;
@@ -172,20 +183,21 @@ public class Request {
             return this;
         }
 
+        @Nullable
         public GraphCore getGraphCore() {
-            return graphCore;
+            return this.graphCore;
         }
 
         public Header getHeader() {
-            return header;
+            return this.header;
         }
 
         public Uri getUri() {
-            return uri;
+            return this.uri;
         }
 
         public Context getContext() {
-            return context;
+            return this.context;
         }
 
         public Request build() {
@@ -194,7 +206,7 @@ public class Request {
 
 
         public int getTimeout() {
-            return timeout;
+            return this.timeout;
         }
     }
 }
