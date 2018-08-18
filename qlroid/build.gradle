@@ -26,7 +26,7 @@ android {
 
 
 group = 'com.zarinpal'
-version = '0.0.2'
+version = '0.0.3'
 
 task generateSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -53,7 +53,7 @@ artifacts {
 
 bintray {
     user = 'xxxx'
-    key = 'xxxx'
+    key = 'xxxxx'
     pkg {
 
         repo = 'lib'
