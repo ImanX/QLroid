@@ -6,18 +6,22 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.github.imanx.QLroid.GraphCore;
+import com.github.imanx.QLroid.utility.JsonUtility;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
+import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
 import com.google.gson.GsonBuilder;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -27,6 +31,8 @@ import java.util.List;
  */
 
 public class Request {
+
+    public static final String TAG = "TAG_A";
 
     private Builder  builder;
     private Callback callback;
@@ -74,13 +80,16 @@ public class Request {
                                     return;
                                 }
 
-                                String json = getStrJson(jsonObject);
+                                String json = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
 
-                                Class<?> clazz = isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
+                                Class<?> clazz = JsonUtility.isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
 
-                                callback.onResponse(new GsonBuilder()
-                                        .create()
-                                        .fromJson(json, clazz));
+//                                callback.onResponse(new GsonBuilder()
+//                                        .create()
+//                                        .fromJson(json, clazz));
+
+                                fillObjects(builder.graphCore.getModel().getClass(), jsonObject);
+
                             }
 
                             @Override
@@ -95,46 +104,89 @@ public class Request {
 
     }
 
-    private boolean isJsonObject(String json) {
+
+    public void fillObjects(Class<?> clazz, JSONObject jsonObject) {
+
         try {
-            JSONObject jsonObject = new JSONObject(json);
-            return true;
+
+            Iterator<String> iterator = jsonObject.keys();
+
+            while (iterator.hasNext()) {
+
+                String key   = iterator.next();
+                Object value = jsonObject.get(key);
+
+                Object object = clazz.newInstance();
+
+                if (key.equals(clazz.getSimpleName())) {
+                    // TODO : find the class
+                    // do ...
+
+
+                }
+
+                if (JsonUtility.isJsonObject(value.toString())) {
+
+                    fillObjects(clazz, new JSONObject(value.toString()));
+
+                } else if (JsonUtility.isJsonArray(value.toString())) {
+
+
+                } else {
+                    initializeFields(clazz, object, key, value);
+                    callback.onResponse(object);
+                }
+            }
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
-    private String getStrJson(@Nullable JSONObject jsonObject) {
+    public void initializeFields(Class clazz, Object object, String key, Object value) {
 
-        if (jsonObject == null) {
-            return "";
-        }
+        for (Field field : clazz.getDeclaredFields()) {
+            String fieldName = "";
 
-        JSONObject optJsonObject;
-
-        try {
-            jsonObject = jsonObject.getJSONObject("data");
-
-            JSONArray optJSONArray = jsonObject.optJSONArray(this.builder.graphCore.getOperationName());
-
-            if (optJSONArray != null) {
-                return optJSONArray.toString();
+            if (field.getAnnotation(UnInject.class) != null) {
+                continue;
             }
 
-
-            optJsonObject = jsonObject.getJSONObject(this.builder.graphCore.getOperationName());
-            if (optJsonObject != null) {
-                return optJsonObject.toString();
+            if (field.getAnnotation(SerializeName.class) != null) {
+                String temp = field.getAnnotation(SerializeName.class).value();
+                if (temp.equals(key)) {
+                    fieldName = field.getName();
+                }
+            } else if (field.getName().equals(key)) {
+                fieldName = field.getName();
             }
 
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            if (!fieldName.isEmpty()) {
+                setValue(object, fieldName, value);
+            }
         }
+    }
 
-        return "";
+    public void setValue(Object object, String fieldName, Object value) {
 
+        Class<?> newClass = object.getClass();
+
+        while (newClass != null) {
+            try {
+                Field field = newClass.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(object, value);
+                return;
+            } catch (NoSuchFieldException e) {
+                newClass = newClass.getSuperclass();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

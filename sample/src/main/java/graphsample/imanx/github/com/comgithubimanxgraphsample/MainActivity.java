@@ -3,6 +3,7 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
@@ -10,7 +11,10 @@ import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        Request.Builder builder = new Request.Builder(this, uri, new Query(new TicketDepartments()) {
+        Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
             @Override
             public String getOperationName() {
-                return "TicketDepartments";
+                return "Me";
             }
 
         });
@@ -47,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
         builder.setHeader(header)
                 .setTimeout(10)
                 .build()
-                .enqueue(new Callback<List<TicketDepartments>>() {
+                .enqueue(new Callback<Me>() {
                     @Override
-                    public void onResponse(List<TicketDepartments> response) {
-                        txt.setText("response Ok " + response.get(0));
+                    public void onResponse(Me response) {
+                        txt.setText("response Ok " + response.getFirstName());
                     }
 
                     @Override
