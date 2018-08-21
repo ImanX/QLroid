@@ -12,6 +12,11 @@ public class Me extends GraphModel {
     private String email;
 
     private String avatar;
+
+    @SerializeName("first_name")
+    private String firstName;
+
+
     @UnInject
     private String userLevelUp;
 
@@ -41,6 +46,14 @@ public class Me extends GraphModel {
 
     public void setUserLevelUp(String userLevelUp) {
         this.userLevelUp = userLevelUp;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 
     public void setAddresses(List<Addresses> addresses) {

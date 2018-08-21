@@ -8,16 +8,17 @@ import android.util.Log;
 import com.github.imanx.QLroid.GraphCore;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
+import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
-import com.google.gson.GsonBuilder;
+import com.github.imanx.QLroid.utility.JsonUtility;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.lang.reflect.Field;
 
 
 /**
@@ -27,8 +28,11 @@ import java.util.List;
 
 public class Request {
 
+    public static final String TAG = "TAG_A";
+
     private Builder  builder;
     private Callback callback;
+    private String   cleanJsonReturn;
 
     private Request(Builder builder) {
         this.builder = builder;
@@ -50,12 +54,10 @@ public class Request {
             @Override
             public void run() {
 
-                String aa = builder.getGraphCore().getQuery();
-
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("operationName", null);
-                    jsonObject.put("query", aa);
+                    jsonObject.put("query", builder.getGraphCore().getQuery());
                     jsonObject.put("variable", "{}");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -75,13 +77,11 @@ public class Request {
                                     return;
                                 }
 
-                                String json = getStrJson(jsonObject);
+                                String json   = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
+                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
 
-                                Class<?> clazzz = isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
+                                callback.onResponse(result);
 
-                                callback.onResponse(new GsonBuilder()
-                                        .create()
-                                        .fromJson(json, clazzz));
                             }
 
                             @Override
@@ -90,56 +90,36 @@ public class Request {
                                 if (callback != null) callback.onFailure();
                             }
                         });
-
-
             }
 
         }).start();
 
     }
 
-    private boolean isJsonObject(String json) {
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            return true;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    public String iteratorFieldClass(Class clazz, String json) {
+        this.cleanJsonReturn = json;
+        for (Field field : clazz.getDeclaredFields()) {
+            String fieldName;
 
-    private String getStrJson(@Nullable JSONObject jsonObject) {
-
-        if (jsonObject == null) {
-            return "";
-        }
-
-        JSONObject optJsonObject;
-
-        try {
-            jsonObject = jsonObject.getJSONObject("data");
-
-            JSONArray optJSONArray = jsonObject.optJSONArray(this.builder.graphCore.getOperationName());
-
-            if (optJSONArray != null) {
-                return optJSONArray.toString();
+            if (field.getAnnotation(UnInject.class) != null) {
+                continue;
             }
 
+            if (field.getAnnotation(SerializeName.class) != null) {
+                String temp = field.getAnnotation(SerializeName.class).value();
 
-            optJsonObject = jsonObject.getJSONObject(this.builder.graphCore.getOperationName());
-            if (optJsonObject != null) {
-                return optJsonObject.toString();
+                if (json.contains(temp)) {
+                    fieldName = field.getName();
+                    this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, fieldName);
+                }
             }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
-        return "";
-
+        Class[] classList = clazz.getDeclaredClasses();
+        for (Class myClass : classList) {
+            iteratorFieldClass(myClass, this.cleanJsonReturn);
+        }
+        return this.cleanJsonReturn;
     }
-
 
     // Builder segment
 
