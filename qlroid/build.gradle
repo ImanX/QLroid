@@ -8,8 +8,6 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -26,7 +24,7 @@ android {
 
 
 group = 'com.zarinpal'
-version = '0.0.3'
+version = '0.0.4'
 
 task generateSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
