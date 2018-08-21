@@ -3,38 +3,22 @@ package com.github.imanx.QLroid.request;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.github.imanx.QLroid.GraphCore;
-import com.github.imanx.QLroid.GraphModel;
-import com.github.imanx.QLroid.utility.JsonUtility;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.github.imanx.QLroid.utility.JsonUtility;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**

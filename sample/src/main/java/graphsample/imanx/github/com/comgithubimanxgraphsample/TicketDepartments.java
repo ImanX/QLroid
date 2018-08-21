@@ -1,12 +1,10 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import com.github.imanx.QLroid.GraphModel;
-import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 
 public class TicketDepartments extends GraphModel {
     private int     id;
-//    @SerializeName("title")
     private String  title;
     @UnInject
     private boolean flag;
