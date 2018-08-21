@@ -68,15 +68,14 @@ public class Me extends GraphModel {
     public class Addresses extends GraphModel {
 
         private String address;
-        @SerializeName("type")
-        private String typeeeee;
+        private String type;
 
         public void setAddress(String address) {
             this.address = address;
         }
 
         public String getType() {
-            return typeeeee;
+            return type;
         }
     }
 }

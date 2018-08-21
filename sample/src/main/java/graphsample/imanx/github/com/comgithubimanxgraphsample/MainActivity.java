@@ -14,7 +14,9 @@ import com.github.imanx.QLroid.request.Request;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
         final TextView txt = findViewById(R.id.txt);
 
 
-        String token  = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjI4MGZiNzlmYTE1NzIyNzI4ZGI4YzJmYTkxZGRkN2MwNmQ1OWZkZGI3YTg2YmEzZTY4ZDkxNjc4NTEyYmE3ZjcyMGFlZTcxMTBjYTBkZjg1In0.eyJhdWQiOiIxIiwianRpIjoiMjgwZmI3OWZhMTU3MjI3MjhkYjhjMmZhOTFkZGQ3YzA2ZDU5ZmRkYjdhODZiYTNlNjhkOTE2Nzg1MTJiYTdmNzIwYWVlNzExMGNhMGRmODUiLCJpYXQiOjE1MzM3MTg0MjAsIm5iZiI6MTUzMzcxODQyMCwiZXhwIjoxNTY1MjU0NDIwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.cu4KNY7rnDgXnIiIZX0Odi2u26eKOwVNfy5G35cXzpQ0oD-0ecnBX1sLIXTriteu7sCo5xBB0lm-ZB7KVzHXF2wIEHas5vEXCBe9BF94OQ7DFSQCWhP8ZoZAHx0hlxDtCrfuKVh4KPPc9PrKTG7uI5TDG511cNK769aJ6kC_lRM9tmYRKaU1GI2JrDr7TCoTjVx6mCT0tUKyHbLqr2CMXWzNcQFdTRUkWkFuJUAdrDzNz4Hmeawp4ER9iR-uBshRw-48a1ebSfK5akOUH61ptxBvrvrHvhEyJMQmJ4FIq-rgPTSMVHseXB4tosxqxgNTqgXTkonR0YdfPjDnBqAzymejCGPbZJ5j3xDBAodNIQ4rOq8Nec8DFeruwEgTcFVCBA5BB0NlU_BKIx8BfMI6MW1jx2JWTmHjGUIJpqGYB0ZphdwW0_yqxCeJoWVvdgtoeqDDusNXU6ei4JJmDbXo9RYQe3CoP9zke3rTT0xlegQ-7ufRUgD9cLE1mztu_WaC7PvP_9Abvxj5YCF9dQGF6V1sgY627RDYnGlCYogPr041Vdg7DxlqJsTTdGoTH8a8HrM7knTHF-qfdJztC8_n9az7aNa6VEYWe2v1iTaJugT-uk3NiIiau6EYkJ0yjaaLgkEnsExYEml_JpX9WLztdO2ENRPT3KWHKSjc01J2Va0";
+        String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImJmZWMyOTU4NzgwYWQ0ZTliYjI0YTZkMDQ4ZjI3NzBiN2IyODcwMWU5N2E2YmNhMGNhYmFmM2I0OGJjNGM2NWQ5YTNkODc2NjZiNmZhODRlIn0.eyJhdWQiOiIxIiwianRpIjoiYmZlYzI5NTg3ODBhZDRlOWJiMjRhNmQwNDhmMjc3MGI3YjI4NzAxZTk3YTZiY2EwY2FiYWYzYjQ4YmM0YzY1ZDlhM2Q4NzY2NmI2ZmE4NGUiLCJpYXQiOjE1MzQ4NDA4OTAsIm5iZiI6MTUzNDg0MDg5MCwiZXhwIjoxNTY2Mzc2ODkwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.BoC6T4cZMnN2bMBPQRG43Ega06s5GfOu8wUMMXeDLL7rTmZS0X7lxmfmpkxPPQfRbuCAHN1wIhQSJD_PWf7GB2_04-dgecYUkptE139UwmTOBS_lvEMhC5OkiwAtOsY8PfYsm91obNRuqY8JF58luhw54tfX7dS1zavUVI_0oE4D1Vr76FpzZlqLCaXSHzws_yN3QVVWfsRgSOmLKH1-qxcrSRaL0tlwJ50PK_i9rABkefvNNTbscjx4tFGIxjo4RGBFyVxnKh8mgTmZOY15rr76DrnK3ZiuopQpKZrFWZSV_1lrN1mcCmOqFSnEahksbIFZbpXhHSBqqMHjE4UGwSRDoIm_JXfNtlUpXvLCfaKmv_zS_MOIPhz4DvQPqbmtXH2qhhuf7n8zzGPfKUHbAZUYwgmt73G8ypUrLXZOIOB8FMfiPhecavLKVdZLQEmQNqHf-lIOWpmGKwt9Qwl5AS8kPj6xlN1BvLtOTb7a9WpYblkrUt62pRqPQUWBLgFlGTSs5UqUWNCypkNxvNTM1pa71UqX2zV-Zy3WDVHhxILsnvU05VN24P_f3egUi8CBxLsvG0oN3Rpbv9cRYWU481RpH08bTM5e8mYAaLLxy21x-CECEfHOo5hzf86LoUkyrTwYZO13a_3RzxKMo0lmh4g4Erpz-0WocwtHCZxRhuY";
         Header header = new Header();
         header.append("Authorization", token);
 
         Uri uri = Uri.parse(baseUrl);
 
-        Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
+        final Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
             @Override
             public String getOperationName() {
                 return "Me";
@@ -51,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
         builder.setHeader(header)
                 .setTimeout(10)
                 .build()
-                .enqueue(new Callback<Me>() {
+                .enqueue(new Callback() {
+
                     @Override
-                    public void onResponse(Me response) {
-                        txt.setText("response Ok " + response.getFirstName());
+                    public void onResponse(String response) {
+
+                        Me me = new GsonBuilder().create().fromJson(response, Me.class);
+                        txt.setText("response : " + me.getFirstName());
                     }
 
                     @Override

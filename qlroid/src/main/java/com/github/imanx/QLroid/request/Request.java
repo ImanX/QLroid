@@ -3,23 +3,35 @@ package com.github.imanx.QLroid.request;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.github.imanx.QLroid.GraphCore;
+import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.utility.JsonUtility;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.annonations.SerializeName;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +48,7 @@ public class Request {
 
     private Builder  builder;
     private Callback callback;
+    private String   cleanJsonReturn;
 
     private Request(Builder builder) {
         this.builder = builder;
@@ -80,15 +93,10 @@ public class Request {
                                     return;
                                 }
 
-                                String json = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
+                                String json   = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
+                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
 
-                                Class<?> clazz = JsonUtility.isJsonObject(json) ? builder.graphCore.getModel().getClass() : List.class;
-
-//                                callback.onResponse(new GsonBuilder()
-//                                        .create()
-//                                        .fromJson(json, clazz));
-
-                                fillObjects(builder.graphCore.getModel().getClass(), jsonObject);
+                                callback.onResponse(result);
 
                             }
 
@@ -104,53 +112,10 @@ public class Request {
 
     }
 
-
-    public void fillObjects(Class<?> clazz, JSONObject jsonObject) {
-
-        try {
-
-            Iterator<String> iterator = jsonObject.keys();
-
-            while (iterator.hasNext()) {
-
-                String key   = iterator.next();
-                Object value = jsonObject.get(key);
-
-                Object object = clazz.newInstance();
-
-                if (key.equals(clazz.getSimpleName())) {
-                    // TODO : find the class
-                    // do ...
-
-
-                }
-
-                if (JsonUtility.isJsonObject(value.toString())) {
-
-                    fillObjects(clazz, new JSONObject(value.toString()));
-
-                } else if (JsonUtility.isJsonArray(value.toString())) {
-
-
-                } else {
-                    initializeFields(clazz, object, key, value);
-                    callback.onResponse(object);
-                }
-            }
-
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void initializeFields(Class clazz, Object object, String key, Object value) {
-
+    public String iteratorFieldClass(Class clazz, String json) {
+        this.cleanJsonReturn = json;
         for (Field field : clazz.getDeclaredFields()) {
-            String fieldName = "";
+            String fieldName;
 
             if (field.getAnnotation(UnInject.class) != null) {
                 continue;
@@ -158,37 +123,19 @@ public class Request {
 
             if (field.getAnnotation(SerializeName.class) != null) {
                 String temp = field.getAnnotation(SerializeName.class).value();
-                if (temp.equals(key)) {
+
+                if (json.contains(temp)) {
                     fieldName = field.getName();
+                    this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, fieldName);
                 }
-            } else if (field.getName().equals(key)) {
-                fieldName = field.getName();
-            }
-
-            if (!fieldName.isEmpty()) {
-                setValue(object, fieldName, value);
             }
         }
-    }
-
-    public void setValue(Object object, String fieldName, Object value) {
-
-        Class<?> newClass = object.getClass();
-
-        while (newClass != null) {
-            try {
-                Field field = newClass.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                field.set(object, value);
-                return;
-            } catch (NoSuchFieldException e) {
-                newClass = newClass.getSuperclass();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+        Class[] classList = clazz.getDeclaredClasses();
+        for (Class myClass : classList) {
+            iteratorFieldClass(myClass, this.cleanJsonReturn);
         }
+        return this.cleanJsonReturn;
     }
-
 
     // Builder segment
 
