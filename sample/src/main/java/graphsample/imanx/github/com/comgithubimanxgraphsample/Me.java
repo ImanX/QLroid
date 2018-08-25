@@ -3,7 +3,6 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -18,11 +17,9 @@ public class Me extends GraphModel {
     @UnInject
     private String userLevelUp;
 
-    @SerializedName("Addresses")
     @UnInject
     private List<Addresses> addresses;
 
-    @SerializedName("NotificationPreferences")
     @UnInject
     private List<NotificationPreferences> notificationPreferences;
 

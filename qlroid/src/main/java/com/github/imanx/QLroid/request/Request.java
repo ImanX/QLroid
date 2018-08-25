@@ -76,10 +76,14 @@ public class Request {
                                 if (callback == null) {
                                     return;
                                 }
-
                                 String json   = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
-                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
 
+                                if (builder.getGraphCore().getModel() == null){
+                                    callback.onResponse(json);
+                                    return;
+                                }
+
+                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
                                 callback.onResponse(result);
 
                             }

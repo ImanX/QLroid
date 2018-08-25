@@ -42,10 +42,15 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        final Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
+        final Request.Builder builder = new Request.Builder(this, uri, new Query() {
             @Override
             public String getOperationName() {
                 return "Me";
+            }
+
+            @Override
+            public String[] getResponseFields() {
+                return new String[]{"avatar", "email"};
             }
         });
 
@@ -56,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        Me me = new GsonBuilder().create().fromJson(response, Me.class);
-                        txt.setText("response : " + me.getPreferences().get(0).getType());
+                        txt.setText("response : " + response);
                     }
 
                     @Override
