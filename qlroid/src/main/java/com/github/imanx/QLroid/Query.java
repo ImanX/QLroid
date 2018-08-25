@@ -24,10 +24,11 @@ public abstract class Query extends GraphCore {
         }
 
         String query = "query { %s  %s { %s }}";
-        String operationName = getOperationName() == null ?
-                getModel().getClass().getSimpleName() : getOperationName();
 
-        operationName = getArgument() == null ? getOperationName() : operationName + "(" + getArgument().getRaw() + ")";
+
+        String operationName = getArgument() == null ? getOperationName() : getOperationName()
+                + "(" + getArgument().getRaw() + ")";
+
         return String.format(
                 query,
                 getModel() == null ? "" : getModel().getResponseModelName() + " : ",

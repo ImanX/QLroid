@@ -2,7 +2,7 @@ package com.github.imanx.QLroid;
 
 import android.support.annotation.Nullable;
 
-import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.request.Argument;
 
@@ -27,8 +27,8 @@ public class GraphModel {
         if (classes.getAnnotation(UnInject.class) == null) {
             String className;
 
-            if (classes.getAnnotation(SerializeName.class) != null) {
-                className = ((SerializeName) classes.getAnnotation(SerializeName.class)).value();
+            if (classes.getAnnotation(SerializedField.class) != null) {
+                className = ((SerializedField) classes.getAnnotation(SerializedField.class)).value();
             } else {
                 className = classes.getSimpleName();
             }
@@ -50,8 +50,8 @@ public class GraphModel {
 
                 String fieldName;
 
-                if (field.getAnnotation(SerializeName.class) != null) {
-                    fieldName = (field.getAnnotation(SerializeName.class)).value();
+                if (field.getAnnotation(SerializedField.class) != null) {
+                    fieldName = (field.getAnnotation(SerializedField.class)).value();
                 } else {
                     fieldName = field.getName();
                 }

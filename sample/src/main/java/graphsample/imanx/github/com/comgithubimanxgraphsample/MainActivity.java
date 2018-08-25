@@ -3,14 +3,22 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
+import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -18,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG_A";
 
-    private static String baseUrl = "http://192.168.66.115/api/graphql";
+    private static String baseUrl = "http://192.168.66.115/api/graphql/my";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +42,15 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        final Request.Builder builder = new Request.Builder(this, uri, new Query(new Me()) {
+        final Request.Builder builder = new Request.Builder(this, uri, new Query() {
             @Override
             public String getOperationName() {
                 return "Me";
+            }
+
+            @Override
+            public String[] getResponseFields() {
+                return new String[]{"avatar", "email"};
             }
         });
 
@@ -48,11 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-
-                        GsonBuilder builder = new GsonBuilder();
-                        Me          me      = builder.create().fromJson(response, Me.class);
-
-                        txt.setText("response : " + me.getFirstName());
+                        txt.setText("response : " + response);
                     }
 
                     @Override

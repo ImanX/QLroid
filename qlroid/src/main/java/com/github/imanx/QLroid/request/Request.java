@@ -8,7 +8,7 @@ import android.util.Log;
 import com.github.imanx.QLroid.GraphCore;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
-import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.utility.JsonUtility;
@@ -76,10 +76,14 @@ public class Request {
                                 if (callback == null) {
                                     return;
                                 }
-
                                 String json   = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
-                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
 
+                                if (builder.getGraphCore().getModel() == null){
+                                    callback.onResponse(json);
+                                    return;
+                                }
+
+                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
                                 callback.onResponse(result);
 
                             }
@@ -96,8 +100,32 @@ public class Request {
 
     }
 
-    public String iteratorFieldClass(Class clazz, String json) {
+    private String iteratorFieldClass(Class clazz, String json) {
+
         this.cleanJsonReturn = json;
+        iteratorFields(clazz, json);
+
+        Class[] classList = clazz.getDeclaredClasses();
+
+        for (Class myClass : classList) {
+
+            if (myClass.getAnnotation(UnInject.class) != null) {
+                continue;
+            }
+            iteratorFields(myClass, json);
+        }
+        return this.cleanJsonReturn;
+    }
+
+    public void iteratorFields(Class clazz, String json) {
+
+        if (clazz.getAnnotation(SerializedField.class) != null) {
+            String temp = ((SerializedField) clazz.getAnnotation(SerializedField.class)).value();
+            if (json.contains(temp)) {
+                this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, clazz.getSimpleName());
+            }
+        }
+
         for (Field field : clazz.getDeclaredFields()) {
             String fieldName;
 
@@ -105,8 +133,8 @@ public class Request {
                 continue;
             }
 
-            if (field.getAnnotation(SerializeName.class) != null) {
-                String temp = field.getAnnotation(SerializeName.class).value();
+            if (field.getAnnotation(SerializedField.class) != null) {
+                String temp = field.getAnnotation(SerializedField.class).value();
 
                 if (json.contains(temp)) {
                     fieldName = field.getName();
@@ -114,11 +142,6 @@ public class Request {
                 }
             }
         }
-        Class[] classList = clazz.getDeclaredClasses();
-        for (Class myClass : classList) {
-            iteratorFieldClass(myClass, this.cleanJsonReturn);
-        }
-        return this.cleanJsonReturn;
     }
 
     // Builder segment
