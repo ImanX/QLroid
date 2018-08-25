@@ -1,7 +1,7 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import com.github.imanx.QLroid.GraphModel;
-import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +12,7 @@ public class Me extends GraphModel {
     private String avatar;
     private String email;
 
-    @SerializeName("first_name")
+    @SerializedField("first_name")
     private String firstName;
 
     @UnInject
@@ -75,15 +75,15 @@ public class Me extends GraphModel {
         return notificationPreferences;
     }
 
-    @SerializeName("addresses")
+    @SerializedField("addresses")
     public class Addresses {
 
         private String address;
         private String type;
         private String id;
-        @SerializeName("landline")
+        @SerializedField("landline")
         private String landLine;
-        @SerializeName("postal_code")
+        @SerializedField("postal_code")
         private String postalCode;
         private String location;
 
@@ -135,7 +135,7 @@ public class Me extends GraphModel {
             this.location = location;
         }
     }
-    @SerializeName("notification_preferences")
+    @SerializedField("notification_preferences")
     public class NotificationPreferences {
 
         private String type;

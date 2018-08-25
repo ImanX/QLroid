@@ -22,6 +22,6 @@ example :
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD , ElementType.TYPE})
-public @interface SerializeName {
+public @interface SerializedField {
     String value() default "";
 }

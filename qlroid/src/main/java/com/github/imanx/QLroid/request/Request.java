@@ -8,7 +8,7 @@ import android.util.Log;
 import com.github.imanx.QLroid.GraphCore;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
-import com.github.imanx.QLroid.annonations.SerializeName;
+import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.utility.JsonUtility;
@@ -115,8 +115,8 @@ public class Request {
 
     public void iteratorFields(Class clazz, String json) {
 
-        if (clazz.getAnnotation(SerializeName.class) != null) {
-            String temp = ((SerializeName) clazz.getAnnotation(SerializeName.class)).value();
+        if (clazz.getAnnotation(SerializedField.class) != null) {
+            String temp = ((SerializedField) clazz.getAnnotation(SerializedField.class)).value();
             if (json.contains(temp)) {
                 this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, clazz.getSimpleName());
             }
@@ -129,8 +129,8 @@ public class Request {
                 continue;
             }
 
-            if (field.getAnnotation(SerializeName.class) != null) {
-                String temp = field.getAnnotation(SerializeName.class).value();
+            if (field.getAnnotation(SerializedField.class) != null) {
+                String temp = field.getAnnotation(SerializedField.class).value();
 
                 if (json.contains(temp)) {
                     fieldName = field.getName();
