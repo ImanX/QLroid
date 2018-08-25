@@ -6,19 +6,16 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.github.imanx.QLroid.GraphCore;
+import com.github.imanx.QLroid.GraphModel;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
-import com.github.imanx.QLroid.annonations.SerializedField;
-import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.callback.Callback;
-import com.github.imanx.QLroid.utility.JsonUtility;
+import com.github.imanx.QLroid.utility.Utility;
 import com.zarinpal.libs.httpRequest.HttpRequest;
 import com.zarinpal.libs.httpRequest.OnCallbackRequestListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Field;
 
 
 /**
@@ -28,7 +25,7 @@ import java.lang.reflect.Field;
 
 public class Request {
 
-    public static final String TAG = "TAG_A";
+    public static final String TAG = Request.class.getSimpleName();
 
     private Builder  builder;
     private Callback callback;
@@ -63,6 +60,10 @@ public class Request {
                     e.printStackTrace();
                 }
 
+
+                Log.i(TAG, "run: " + builder.getGraphCore().getQuery());
+
+
                 new HttpRequest(builder.getContext())
                         .setRequestMethod(HttpRequest.POST)
                         .setHeaders(builder.getHeader().getMap())
@@ -73,17 +74,27 @@ public class Request {
                             @Override
                             public void onSuccessResponse(JSONObject jsonObject, String content) {
 
+                                GraphModel model       = builder.getGraphCore().getModel();
+                                String     masterKey   = (model == null) ? builder.getGraphCore().getOperationName() : model.getResponseModelName();
+                                String     wrappedJson = Utility.getWrappedJson(jsonObject, masterKey);
+
+
                                 if (callback == null) {
                                     return;
                                 }
-                                String json   = JsonUtility.getStrJson(jsonObject, builder.getGraphCore().getOperationName());
 
-                                if (builder.getGraphCore().getModel() == null){
-                                    callback.onResponse(json);
+                                if (wrappedJson == null) {
+                                    callback.onResponse(content);
                                     return;
                                 }
 
-                                String result = iteratorFieldClass(builder.getGraphCore().getModel().getClass(), json);
+
+                                if (model == null) {
+                                    callback.onResponse(wrappedJson);
+                                    return;
+                                }
+
+                                String result = Utility.refactor(model.getClass(), wrappedJson);
                                 callback.onResponse(result);
 
                             }
@@ -100,49 +111,6 @@ public class Request {
 
     }
 
-    private String iteratorFieldClass(Class clazz, String json) {
-
-        this.cleanJsonReturn = json;
-        iteratorFields(clazz, json);
-
-        Class[] classList = clazz.getDeclaredClasses();
-
-        for (Class myClass : classList) {
-
-            if (myClass.getAnnotation(UnInject.class) != null) {
-                continue;
-            }
-            iteratorFields(myClass, json);
-        }
-        return this.cleanJsonReturn;
-    }
-
-    public void iteratorFields(Class clazz, String json) {
-
-        if (clazz.getAnnotation(SerializedField.class) != null) {
-            String temp = ((SerializedField) clazz.getAnnotation(SerializedField.class)).value();
-            if (json.contains(temp)) {
-                this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, clazz.getSimpleName());
-            }
-        }
-
-        for (Field field : clazz.getDeclaredFields()) {
-            String fieldName;
-
-            if (field.getAnnotation(UnInject.class) != null) {
-                continue;
-            }
-
-            if (field.getAnnotation(SerializedField.class) != null) {
-                String temp = field.getAnnotation(SerializedField.class).value();
-
-                if (json.contains(temp)) {
-                    fieldName = field.getName();
-                    this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, fieldName);
-                }
-            }
-        }
-    }
 
     // Builder segment
 

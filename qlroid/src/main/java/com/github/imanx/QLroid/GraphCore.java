@@ -1,6 +1,8 @@
 package com.github.imanx.QLroid;
 
 
+import android.support.annotation.Nullable;
+
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.request.Argument;
@@ -32,6 +34,7 @@ public abstract class GraphCore {
 
     public abstract String getQuery();
 
+    @Nullable
     public abstract String getOperationName();
 
 
@@ -48,6 +51,8 @@ public abstract class GraphCore {
         if (getResponseFields() != null) {
             return wrap(Arrays.asList(getResponseFields()));
         }
+
+        //TODO this needs a Illegal Exception.
 
         List<Field>  fields = Arrays.asList(getModel().getClass().getDeclaredFields());
         List<String> result = new ArrayList<>();

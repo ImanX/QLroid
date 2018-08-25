@@ -2,8 +2,8 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
@@ -12,13 +12,6 @@ import com.github.imanx.QLroid.callback.Callback;
 import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -36,13 +29,13 @@ public class MainActivity extends AppCompatActivity {
         final TextView txt = findViewById(R.id.txt);
 
 
-        String token  = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImJmZWMyOTU4NzgwYWQ0ZTliYjI0YTZkMDQ4ZjI3NzBiN2IyODcwMWU5N2E2YmNhMGNhYmFmM2I0OGJjNGM2NWQ5YTNkODc2NjZiNmZhODRlIn0.eyJhdWQiOiIxIiwianRpIjoiYmZlYzI5NTg3ODBhZDRlOWJiMjRhNmQwNDhmMjc3MGI3YjI4NzAxZTk3YTZiY2EwY2FiYWYzYjQ4YmM0YzY1ZDlhM2Q4NzY2NmI2ZmE4NGUiLCJpYXQiOjE1MzQ4NDA4OTAsIm5iZiI6MTUzNDg0MDg5MCwiZXhwIjoxNTY2Mzc2ODkwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.BoC6T4cZMnN2bMBPQRG43Ega06s5GfOu8wUMMXeDLL7rTmZS0X7lxmfmpkxPPQfRbuCAHN1wIhQSJD_PWf7GB2_04-dgecYUkptE139UwmTOBS_lvEMhC5OkiwAtOsY8PfYsm91obNRuqY8JF58luhw54tfX7dS1zavUVI_0oE4D1Vr76FpzZlqLCaXSHzws_yN3QVVWfsRgSOmLKH1-qxcrSRaL0tlwJ50PK_i9rABkefvNNTbscjx4tFGIxjo4RGBFyVxnKh8mgTmZOY15rr76DrnK3ZiuopQpKZrFWZSV_1lrN1mcCmOqFSnEahksbIFZbpXhHSBqqMHjE4UGwSRDoIm_JXfNtlUpXvLCfaKmv_zS_MOIPhz4DvQPqbmtXH2qhhuf7n8zzGPfKUHbAZUYwgmt73G8ypUrLXZOIOB8FMfiPhecavLKVdZLQEmQNqHf-lIOWpmGKwt9Qwl5AS8kPj6xlN1BvLtOTb7a9WpYblkrUt62pRqPQUWBLgFlGTSs5UqUWNCypkNxvNTM1pa71UqX2zV-Zy3WDVHhxILsnvU05VN24P_f3egUi8CBxLsvG0oN3Rpbv9cRYWU481RpH08bTM5e8mYAaLLxy21x-CECEfHOo5hzf86LoUkyrTwYZO13a_3RzxKMo0lmh4g4Erpz-0WocwtHCZxRhuY";
         Header header = new Header();
-        header.append("Authorization", token);
+        header.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImE4ZGU0YjJiZDlkMDQ4Y2E4ZDJjMDQzYmNiMjgzODM1MTJhZGY1N2NjNmZjODI3Njk2ODJjY2U3NmMwMTE5YmZkNzRmMTU3YzdjMzI2NzM2In0.eyJhdWQiOiIxIiwianRpIjoiYThkZTRiMmJkOWQwNDhjYThkMmMwNDNiY2IyODM4MzUxMmFkZjU3Y2M2ZmM4Mjc2OTY4MmNjZTc2YzAxMTliZmQ3NGYxNTdjN2MzMjY3MzYiLCJpYXQiOjE1MzUxODA1MzgsIm5iZiI6MTUzNTE4MDUzOCwiZXhwIjoxNTY2NzE2NTM4LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.OPLiIE5270mMTyt8W4KVnH6nSavuORMC5-JEdK0lDJCx283zDiLnCxh3Fbj35EH6ezvfosSm89vL_-xfJRgAgvdj2erRLvct0Lzj-9PZlbQRXYtw0B8pf2oAVwZG0WJiQhUTH4cTWFv6RmZSUyzYI9EWQJQ1u3ylkbmynoVMox3ZnmubwTFMUHenicI69ipk5GHoBGWAYQ098iV2o4Qu9ge9B4kFd3DsVU8kkU_ASPzg5YM61eHOeOho99GVFpn6roEEvCNiRALIihmZfCFjf90HoIbXV_gQhJc_mMnlSs2FWHRtNM0VLplnd_1AttyiR9Qi0LgHnqy0YcVNz7x9rBpPYXrxvLauhqRermxAF1qJO8VZTHIwifHJ5tpx8UgLHVzrpU2M4e9JDm0QiAs0dS8dP2tW_uUEEbVokumws2BefuvvPzQ1H6RyObiTKOfMpLEXCul8OmGfzeKIbQwhJwedUpS5TmN9gIgm7QIEE0JseMojJOLqBF8EdpQ0hEEWt7gZQhUiJzbdCCh9Pj8x8dghEikdBtYGiGHnhnwxUA3C62aebnVYrGnEGaNQPEaGUJs3v9LnQPAnxzXLyMirJSh0CHlAjgJ7d2Sw8hmPsCtaNmJhrqSmShzE3m1JqS0wanxs7gT5C_UCUQkTLo2juIaVbUS3PEwsXIwuXqCMqhQ");
 
         Uri uri = Uri.parse(baseUrl);
 
         final Request.Builder builder = new Request.Builder(this, uri, new Query() {
+            @Nullable
             @Override
             public String getOperationName() {
                 return "Me";
@@ -50,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public String[] getResponseFields() {
-                return new String[]{"avatar", "email"};
+                return new String[]{"email", "avatar"};
             }
+
         });
 
         builder.setHeader(header)
