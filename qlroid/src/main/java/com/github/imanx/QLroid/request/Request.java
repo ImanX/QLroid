@@ -96,8 +96,32 @@ public class Request {
 
     }
 
-    public String iteratorFieldClass(Class clazz, String json) {
+    private String iteratorFieldClass(Class clazz, String json) {
+
         this.cleanJsonReturn = json;
+        iteratorFields(clazz, json);
+
+        Class[] classList = clazz.getDeclaredClasses();
+
+        for (Class myClass : classList) {
+
+            if (myClass.getAnnotation(UnInject.class) != null) {
+                continue;
+            }
+            iteratorFields(myClass, json);
+        }
+        return this.cleanJsonReturn;
+    }
+
+    public void iteratorFields(Class clazz, String json) {
+
+        if (clazz.getAnnotation(SerializeName.class) != null) {
+            String temp = ((SerializeName) clazz.getAnnotation(SerializeName.class)).value();
+            if (json.contains(temp)) {
+                this.cleanJsonReturn = this.cleanJsonReturn.replaceAll(temp, clazz.getSimpleName());
+            }
+        }
+
         for (Field field : clazz.getDeclaredFields()) {
             String fieldName;
 
@@ -114,11 +138,6 @@ public class Request {
                 }
             }
         }
-        Class[] classList = clazz.getDeclaredClasses();
-        for (Class myClass : classList) {
-            iteratorFieldClass(myClass, this.cleanJsonReturn);
-        }
-        return this.cleanJsonReturn;
     }
 
     // Builder segment
