@@ -32,7 +32,7 @@ public class Utility {
             }
 
             JSONArray  optJSONArray  = jsonObject.optJSONArray(key);
-            JSONObject optJsonObject = jsonObject.getJSONObject(key);
+            JSONObject optJsonObject = jsonObject.optJSONObject(key);
 
 
             if (optJSONArray != null) {
