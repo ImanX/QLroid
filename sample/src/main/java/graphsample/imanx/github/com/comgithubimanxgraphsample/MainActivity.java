@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = Uri.parse(baseUrl);
 
-        final Request.Builder builder = new Request.Builder(this, uri, new Query() {
+        final Request.Builder builder = new Request.Builder(this, uri, new Query(new Mes()) {
             @Nullable
             @Override
             public String getOperationName() {
-                return "Me";
+                return null;
             }
 
             @Override
