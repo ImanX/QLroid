@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 
 public class GraphModel {
 
-    private StringBuilder           builder = new StringBuilder();
+    private StringBuilder builder = new StringBuilder();
 
 
     public String getResponseModelName() {
