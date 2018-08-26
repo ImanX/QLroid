@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.callback.Callback;
-import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Nullable
             @Override
             public String getOperationName() {
-                return null;
+                return "Me";
             }
 
             @Override

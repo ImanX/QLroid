@@ -19,24 +19,23 @@ public abstract class Query extends GraphCore {
     @Override
     public String getQuery() {
 
-        if (getModel() != null && getOperationName() == null) {
-            return "query { " + getModel().buildQuery(getArgument()) + "}";
-        }
-
         String query         = "query { %s  %s { %s }}";
         String operationName = getOperationName();
         String responseName  = "";
-
-
-        if (getArgument() != null) {
-            operationName = String.format("(%s)", getArgument().getRaw());
-        }
-
 
         if (getModel() != null) {
             responseName = String.format("%s :", getModel().getResponseModelName());
         }
 
+
+        if (getModel() != null) {
+            return "query { " + getModel().buildQuery(getArgument(), responseName + "" + getOperationName()) + "}";
+        }
+
+
+        if (getArgument() != null) {
+            operationName = String.format("(%s)", getArgument().getRaw());
+        }
 
         return String.format(
                 query,

@@ -153,5 +153,4 @@ public class Mes extends GraphModel {
             this.channels = channels;
         }
     }
-
 }

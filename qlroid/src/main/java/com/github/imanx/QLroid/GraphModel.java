@@ -16,15 +16,12 @@ import java.lang.reflect.Field;
 
 public class GraphModel {
 
-
-    private StringBuilder builder = new StringBuilder();
-
     public String getResponseModelName() {
         return this.getClass().getSimpleName();
     }
 
 
-    private String fetch(Class clazz, StringBuilder builder) {
+    private String recycle(Class clazz, StringBuilder builder, @Nullable String opt) {
 
 
         if (clazz == null) {
@@ -33,9 +30,10 @@ public class GraphModel {
                     .append("\n")
                     .toString();
         }
-
-
         String parentName = clazz.getSimpleName();
+        if (opt != null) {
+            parentName = opt;
+        }
 
 
         if (clazz.getAnnotation(SerializedField.class) != null) {
@@ -75,64 +73,17 @@ public class GraphModel {
         }
 
         for (Class child : clazz.getDeclaredClasses()) {
-            fetch(child, builder);
+            recycle(child, builder, null);
         }
 
-        return fetch(null, builder);
+        return recycle(null, builder, null);
 
 
     }
 
-    private String recycle(Class classes) {
-
-        if (classes.getAnnotation(UnInject.class) == null) {
-            String className;
-
-            if (classes.getAnnotation(SerializedField.class) != null) {
-                className = ((SerializedField) classes.getAnnotation(SerializedField.class)).value();
-            } else {
-                className = classes.getSimpleName();
-            }
-
-            this.builder.append(className);
-
-            if (this.getClass() == classes) {
-                this.builder.append("%s");
-            }
-
-            this.builder.append("{\n");
-
-            Field[] fields = classes.getDeclaredFields();
-
-            for (Field field : fields) {
-                if (field.getAnnotation(UnInject.class) != null || field.getType() == this.getClass()) {
-                    continue;
-                }
-
-                String fieldName;
-
-                if (field.getAnnotation(SerializedField.class) != null) {
-                    fieldName = (field.getAnnotation(SerializedField.class)).value();
-                } else {
-                    fieldName = field.getName();
-                }
-                this.builder.append(fieldName).append("\n");
-            }
-        }
-
-        Class[] classList = classes.getDeclaredClasses();
-        for (Class clazz : classList) {
-            recycle(clazz);
-        }
-
-        if (classes.getAnnotation(UnInject.class) == null) {
-            this.builder.append("}\n");
-        }
-        return this.builder.toString();
-    }
-
-    protected String buildQuery(@Nullable Argument arg) {
-        String query = fetch(this.getClass(), new StringBuilder());
+    protected String buildQuery(@Nullable Argument arg, @Nullable String operationName) {
+        String query = recycle(this.getClass(), new StringBuilder(), operationName);
+        Log.i("AAA", "buildQuery: "+ query);
         if (arg != null) {
             return String.format(query, "(" + arg.getRaw() + ")");
         }
