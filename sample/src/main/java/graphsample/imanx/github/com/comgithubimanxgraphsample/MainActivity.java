@@ -39,12 +39,6 @@ public class MainActivity extends AppCompatActivity {
             public String getOperationName() {
                 return "Me";
             }
-
-            @Override
-            public String[] getResponseFields() {
-                return new String[]{"email", "avatar"};
-            }
-
         });
 
         builder.setHeader(header)
