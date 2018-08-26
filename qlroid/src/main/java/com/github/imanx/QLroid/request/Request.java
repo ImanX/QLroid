@@ -25,11 +25,8 @@ import org.json.JSONObject;
 
 public class Request {
 
-    public static final String TAG = Request.class.getSimpleName();
-
     private Builder  builder;
     private Callback callback;
-    private String   cleanJsonReturn;
 
     private Request(Builder builder) {
         this.builder = builder;
@@ -59,10 +56,6 @@ public class Request {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
-                Log.i(TAG, "run: " + builder.getGraphCore().getQuery());
-
 
                 new HttpRequest(builder.getContext())
                         .setRequestMethod(HttpRequest.POST)
