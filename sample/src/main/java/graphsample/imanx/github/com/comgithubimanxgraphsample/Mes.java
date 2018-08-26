@@ -10,7 +10,6 @@ public class Mes extends GraphModel {
 
     private String avatar;
     private String email;
-
     @SerializedField("first_name")
     private String firstName;
 
