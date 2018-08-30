@@ -8,6 +8,7 @@ import com.github.imanx.QLroid.GraphModel;
  */
 
 public class User extends GraphModel {
+
     public String name;
 
 

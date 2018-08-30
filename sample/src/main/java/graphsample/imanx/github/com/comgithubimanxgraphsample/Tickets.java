@@ -1,6 +1,7 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import com.github.imanx.QLroid.GraphModel;
+import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 
 public class Tickets extends GraphModel {
@@ -14,21 +15,13 @@ public class Tickets extends GraphModel {
         return title;
     }
 
-    @UnInject
-    public class Name {
-        private String test;
 
-        public void setTest(String test) {
-            this.test = test;
-        }
-
-        public String getTest() {
-            return test;
-        }
-    }
-
-    @UnInject
+    @SerializedField("test")
     public class Family {
+
+        @SerializedField("user_me")
+        public User user11;
+
         private String family;
 
         public void setFamily(String family) {
@@ -39,4 +32,6 @@ public class Tickets extends GraphModel {
             return family;
         }
     }
+
+
 }

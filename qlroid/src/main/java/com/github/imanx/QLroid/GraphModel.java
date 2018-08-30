@@ -1,6 +1,7 @@
 package com.github.imanx.QLroid;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
@@ -63,6 +64,16 @@ public class GraphModel {
 
             if (field.getAnnotation(SerializedField.class) != null) {
                 fieldName = field.getAnnotation(SerializedField.class).value();
+            }
+
+
+            if (field.getType().getSuperclass() == GraphModel.class) {
+                try {
+                    recycle(Class.forName(field.getType().getName()), builder, fieldName);
+                    continue;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
 
 
