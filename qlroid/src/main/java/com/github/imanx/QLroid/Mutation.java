@@ -1,6 +1,11 @@
 package com.github.imanx.QLroid;
 
-import java.util.HashMap;
+import android.util.Log;
+
+import com.github.imanx.QLroid.request.Argument;
+
+import java.util.Locale;
+
 
 /**
  * Created by ImanX.
@@ -18,25 +23,22 @@ public abstract class Mutation extends GraphCore {
     }
 
 
-    public HashMap<String, ?> getRequestFields() {
+    public Argument getRequestFields() {
         return null;
     }
 
     @Override
     public String getQuery() {
-        String        query = "mutation { %s %s(%s){%s}}";
-        StringBuilder args  = new StringBuilder();
+        String query = "mutation { %s %s(%s){%s}}";
+        String args  = getArgument() == null ? "" : getArgument().getMutationRaw();
 
-        if (getRequestFields() != null) {
-            for (HashMap.Entry<String, ?> entry : getRequestFields().entrySet()) {
-                args.append(entry.getKey()).append(":").append(entry.getValue());
-            }
-        }
-        return String.format(query,
+        query = String.format(query,
                 getModel() == null ? "" : ":" + getModel().getResponseModelName(),
                 getOperationName(),
                 args,
                 getFields()
         );
+
+        return query;
     }
 }

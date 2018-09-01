@@ -1,7 +1,14 @@
 package com.github.imanx.QLroid.request;
 
+import android.util.Log;
+
+import com.github.imanx.QLroid.argument.Arg;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,34 +17,47 @@ import java.util.Map;
  */
 
 public class Argument {
-    private HashMap<String, Object> map;
+
+    private List<Arg> args;
 
     public Argument() {
         synchronized (this) {
-            this.map = new HashMap<>();
+            this.args = new ArrayList<>();
         }
     }
 
-    public Argument add(String key, Object value) {
-        this.map.put(key, value);
-        return this;
+    public void add(Arg... arg) {
+        this.args.addAll(Arrays.asList(arg));
     }
 
-    public <E extends Object> E getValue(String key, Class<?> type) {
-        return (E) this.map.get(key);
-    }
 
-    public String getRaw() {
+    public String getMutationRaw() {
+
         StringBuilder raw = new StringBuilder();
 
-        Iterator<Map.Entry<String, Object>> iterator = this.map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Object> entry = iterator.next();
-            raw.append(String.format("%s:%s", entry.getKey(), entry.getValue()));
 
-            if (iterator.hasNext()) raw.append(",");
-
+        for (int i = 0; i < args.size(); i++) {
+            Arg arg = this.args.get(i);
+            raw.append(String.format("$%s:%s!", arg.getKey(), arg.getType().getSimpleName()));
+            if (i < (this.args.size() - 1)) {
+                raw.append(",");
+            }
         }
         return raw.toString();
     }
+
+
+    public String getQueryRaw() {
+        StringBuilder raw = new StringBuilder();
+
+        for (int i = 0; i < args.size(); i++) {
+            Arg arg = this.args.get(i);
+            raw.append(String.format("%s:%s", arg.getKey(), arg.getValue()));
+            if (i != this.args.size()) {
+                raw.append(",");
+            }
+        }
+        return raw.toString();
+    }
+
 }

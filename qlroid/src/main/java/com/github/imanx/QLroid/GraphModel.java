@@ -1,7 +1,6 @@
 package com.github.imanx.QLroid;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
@@ -94,7 +93,7 @@ public class GraphModel {
     protected String buildQuery(@Nullable Argument arg, @Nullable String operationName) {
         String query = recycle(this.getClass(), new StringBuilder(), operationName);
         if (arg != null) {
-            return String.format(query, "(" + arg.getRaw() + ")");
+            return String.format(query, "(" + arg.getQueryRaw() + ")");
         }
         return query.replaceAll("%s", "");
     }

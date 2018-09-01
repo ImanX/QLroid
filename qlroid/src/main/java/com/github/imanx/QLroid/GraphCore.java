@@ -51,6 +51,9 @@ public abstract class GraphCore {
         if (getResponseFields() != null) {
             return wrap(Arrays.asList(getResponseFields()));
         }
+        if (getModel() == null) {
+            return "";
+        }
 
         //TODO this needs a Illegal Exception.
 
