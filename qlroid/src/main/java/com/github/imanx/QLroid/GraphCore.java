@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class GraphCore {
 
     private GraphModel element;
+    private String variables;
 
     public GraphCore(GraphModel element) {
         this.element = element;
@@ -44,6 +45,15 @@ public abstract class GraphCore {
 
     public Argument getArgument() {
         return null;
+    }
+
+    @Nullable
+    public String getVariables() {
+        return this.variables;
+    }
+
+    public void setVariables(String variables) {
+        this.variables = variables;
     }
 
     public String getFields() {

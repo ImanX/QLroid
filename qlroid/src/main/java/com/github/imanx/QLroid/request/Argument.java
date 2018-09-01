@@ -1,15 +1,10 @@
 package com.github.imanx.QLroid.request;
 
-import android.util.Log;
-
 import com.github.imanx.QLroid.argument.Arg;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ImanX.
@@ -38,7 +33,10 @@ public class Argument {
 
         for (int i = 0; i < args.size(); i++) {
             Arg arg = this.args.get(i);
-            raw.append(String.format("$%s:%s!", arg.getKey(), arg.getType().getSimpleName()));
+            String type = arg.getType().getSimpleName().toUpperCase().charAt(0) + arg.getType().getSimpleName().
+                    substring(1, arg.getType().getSimpleName().length());
+
+            raw.append(String.format("$%s:%s!", arg.getKey(), type));
             if (i < (this.args.size() - 1)) {
                 raw.append(",");
             }
@@ -46,14 +44,13 @@ public class Argument {
         return raw.toString();
     }
 
-
     public String getQueryRaw() {
         StringBuilder raw = new StringBuilder();
 
         for (int i = 0; i < args.size(); i++) {
             Arg arg = this.args.get(i);
             raw.append(String.format("%s:%s", arg.getKey(), arg.getValue()));
-            if (i != this.args.size()) {
+            if (i < (this.args.size() - 1)) {
                 raw.append(",");
             }
         }

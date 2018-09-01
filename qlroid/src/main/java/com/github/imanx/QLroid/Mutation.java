@@ -1,10 +1,6 @@
 package com.github.imanx.QLroid;
 
-import android.util.Log;
-
 import com.github.imanx.QLroid.request.Argument;
-
-import java.util.Locale;
 
 
 /**
@@ -31,6 +27,8 @@ public abstract class Mutation extends GraphCore {
     public String getQuery() {
         String query = "mutation { %s %s(%s){%s}}";
         String args  = getArgument() == null ? "" : getArgument().getMutationRaw();
+
+        setVariables(getArgument() == null ? "" : getArgument().getQueryRaw());
 
         query = String.format(query,
                 getModel() == null ? "" : ":" + getModel().getResponseModelName(),

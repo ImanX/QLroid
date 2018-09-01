@@ -15,6 +15,7 @@ import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Argument getArgument() {
                 Argument argument = new Argument();
-                argument.add(new Arg("pan", "6362144210194721", String.class)
-                        , new Arg("expired_at", "2020-02-11", int.class));
+                argument.add(new Arg("pan", "6037997228928280", String.class)
+                        , new Arg("expired_at", "2020-02-00", Date.class));
                 return argument;
             }
         });
