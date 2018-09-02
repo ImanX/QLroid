@@ -43,7 +43,7 @@ public abstract class Mutation extends GraphCore {
 
         query = String.format(query,
                 "(" + mutationRaw + ")",
-                getModel() == null ? "" : ":" + getModel().getResponseModelName(),
+                getModel() == null ? "" : String.format("%s :", getModel().getResponseModelName()),
                 getOperationName(),
                 params,
                 fields
