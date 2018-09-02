@@ -20,7 +20,7 @@ import java.util.List;
 public abstract class GraphCore {
 
     private GraphModel element;
-    private String variables;
+    private String     variables;
 
     public GraphCore(GraphModel element) {
         this.element = element;
@@ -89,6 +89,6 @@ public abstract class GraphCore {
                 .toString()
                 .replace("[", "")
                 .replace("]", "")
-                .replace(",", "\n");
+                .replace(",", " ");
     }
 }

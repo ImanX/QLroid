@@ -44,17 +44,30 @@ public class Argument {
         return raw.toString();
     }
 
-    public String getQueryRaw() {
-        StringBuilder raw = new StringBuilder();
+    public String getParameter() {
+        StringBuilder str = new StringBuilder();
 
         for (int i = 0; i < args.size(); i++) {
             Arg arg = this.args.get(i);
-            raw.append(String.format("%s:%s", arg.getKey(), arg.getValue()));
+            str.append(String.format("%s:$%s", arg.getKey(), arg.getKey()));
             if (i < (this.args.size() - 1)) {
-                raw.append(",");
+                str.append(",");
             }
         }
-        return raw.toString();
+        return str.toString();
+    }
+
+    public String getQueryRaw() {
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < args.size(); i++) {
+            Arg arg = this.args.get(i);
+            str.append(String.format("%s:%s", arg.getKey(), arg.getValue()));
+            if (i < (this.args.size() - 1)) {
+                str.append(",");
+            }
+        }
+        return str.toString();
     }
 
 }

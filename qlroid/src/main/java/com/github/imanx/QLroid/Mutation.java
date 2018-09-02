@@ -1,5 +1,7 @@
 package com.github.imanx.QLroid;
 
+import android.util.Log;
+
 import com.github.imanx.QLroid.request.Argument;
 
 
@@ -25,18 +27,27 @@ public abstract class Mutation extends GraphCore {
 
     @Override
     public String getQuery() {
-        String query = "mutation { %s %s(%s){%s}}";
-        String args  = getArgument() == null ? "" : getArgument().getMutationRaw();
 
-        setVariables(getArgument() == null ? "" : getArgument().getQueryRaw());
+        String query       = "mutation mu %s { %s %s(%s){%s}}";
+        String mutationRaw = "";
+        String params      = "";
+        String var = "";
+
+        if (getArgument() != null) {
+            mutationRaw = getArgument().getMutationRaw();
+            params = getArgument().getParameter();
+            var = getArgument().getQueryRaw();
+        }
+
+        setVariables(var);
 
         query = String.format(query,
+                "(" + mutationRaw + ")",
                 getModel() == null ? "" : ":" + getModel().getResponseModelName(),
                 getOperationName(),
-                args,
+                params,
                 getFields()
         );
-
         return query;
     }
 }

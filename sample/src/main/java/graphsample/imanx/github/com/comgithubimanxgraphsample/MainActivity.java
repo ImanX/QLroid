@@ -67,9 +67,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
+            public String[] getResponseFields() {
+                return new String[]{"id", "pan"};
+            }
+
+            @Override
             public Argument getArgument() {
                 Argument argument = new Argument();
-                argument.add(new Arg("pan", "6037997228928280", String.class)
+                argument.add(new Arg("pan", "6037997228928280", MaskedPan.class)
                         , new Arg("expired_at", "2020-02-00", Date.class));
                 return argument;
             }
