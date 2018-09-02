@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class GraphCore {
 
     private GraphModel element;
+    private String     variables;
 
     public GraphCore(GraphModel element) {
         this.element = element;
@@ -46,10 +47,22 @@ public abstract class GraphCore {
         return null;
     }
 
+    @Nullable
+    public String getVariables() {
+        return this.variables;
+    }
+
+    public void setVariables(String variables) {
+        this.variables = variables;
+    }
+
     public String getFields() {
 
         if (getResponseFields() != null) {
             return wrap(Arrays.asList(getResponseFields()));
+        }
+        if (getModel() == null) {
+            return "";
         }
 
         //TODO this needs a Illegal Exception.
@@ -76,6 +89,6 @@ public abstract class GraphCore {
                 .toString()
                 .replace("[", "")
                 .replace("]", "")
-                .replace(",", "\n");
+                .replace(",", " ");
     }
 }

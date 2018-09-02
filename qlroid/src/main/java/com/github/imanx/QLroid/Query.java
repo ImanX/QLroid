@@ -34,7 +34,7 @@ public abstract class Query extends GraphCore {
 
 
         if (getArgument() != null) {
-            operationName = String.format("(%s)", getArgument().getRaw());
+            operationName = String.format("(%s)", getArgument().getQueryRaw());
         }
 
         return String.format(

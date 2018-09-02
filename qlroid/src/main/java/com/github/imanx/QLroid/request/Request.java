@@ -50,9 +50,15 @@ public class Request {
 
                 JSONObject jsonObject = new JSONObject();
                 try {
+
                     jsonObject.put("operationName", null);
                     jsonObject.put("query", builder.getGraphCore().getQuery());
-                    jsonObject.put("variable", "{}");
+                    if (builder.getGraphCore().getVariables() != null) {
+                        String json = "{" + builder.getGraphCore().getVariables() + "}";
+                        jsonObject.put("variables", new JSONObject(json));
+                    }
+                    Log.i("AAAAAA", "run: "+jsonObject.toString());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
