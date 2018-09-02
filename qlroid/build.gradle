@@ -22,7 +22,7 @@ android {
 
 }
 
-def versionLib = '0.0.11'
+def versionLib = '0.0.12'
 
 group = 'com.zarinpal'
 version = versionLib
