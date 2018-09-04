@@ -3,6 +3,8 @@ package com.github.imanx.QLroid;
 
 import com.github.imanx.QLroid.request.Argument;
 
+import org.json.JSONObject;
+
 
 /**
  * Created by ImanX.
@@ -27,11 +29,11 @@ public abstract class Mutation extends GraphCore {
     @Override
     public String getQuery() {
 
-        String query       = "mutation mu %s { %s %s(%s)%s}";
-        String mutationRaw = "";
-        String params      = "";
-        String var         = "";
-        String fields      = getFields().isEmpty() ? "" : "{" + getFields() + "}";
+        String     query       = "mutation mu %s { %s %s(%s)%s}";
+        String     mutationRaw = "";
+        String     params      = "";
+        JSONObject var         = null;
+        String     fields      = getFields().isEmpty() ? "" : "{" + getFields() + "}";
 
         if (getArgument() != null) {
             mutationRaw = getArgument().getMutationRaw();
