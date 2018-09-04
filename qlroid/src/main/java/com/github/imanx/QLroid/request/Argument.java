@@ -2,8 +2,12 @@ package com.github.imanx.QLroid.request;
 
 import com.github.imanx.QLroid.argument.Arg;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,17 +61,18 @@ public class Argument {
         return str.toString();
     }
 
-    public String getQueryRaw() {
-        StringBuilder str = new StringBuilder();
+    public JSONObject getQueryRaw() {
 
-        for (int i = 0; i < args.size(); i++) {
-            Arg arg = this.args.get(i);
-            str.append(String.format("%s:%s", arg.getKey(), arg.getValue()));
-            if (i < (this.args.size() - 1)) {
-                str.append(",");
+        JSONObject object = new JSONObject();
+
+        for (Arg arg : args) {
+            try {
+                object.put(arg.getKey(), arg.getValue());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-        return str.toString();
+        return object;
     }
 
 }

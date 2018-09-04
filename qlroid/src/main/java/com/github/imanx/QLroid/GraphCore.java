@@ -7,6 +7,8 @@ import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
 import com.github.imanx.QLroid.request.Argument;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ import java.util.List;
 public abstract class GraphCore {
 
     private GraphModel element;
-    private String     variables;
+    private JSONObject     variables;
 
     public GraphCore(GraphModel element) {
         this.element = element;
@@ -48,11 +50,11 @@ public abstract class GraphCore {
     }
 
     @Nullable
-    public String getVariables() {
+    public JSONObject getVariables() {
         return this.variables;
     }
 
-    public void setVariables(String variables) {
+    public void setVariables(JSONObject variables) {
         this.variables = variables;
     }
 

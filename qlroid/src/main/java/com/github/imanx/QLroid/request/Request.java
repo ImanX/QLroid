@@ -54,14 +54,15 @@ public class Request {
                     jsonObject.put("operationName", null);
                     jsonObject.put("query", builder.getGraphCore().getQuery());
                     if (builder.getGraphCore().getVariables() != null) {
-                        String json = "{" + builder.getGraphCore().getVariables() + "}";
-                        jsonObject.put("variables", new JSONObject(json));
+                        JSONObject json = builder.getGraphCore().getVariables();
+                        jsonObject.put("variables", json);
                     }
-                    Log.i("AAAAAA", "run: "+jsonObject.toString());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                Log.i("AAAAAA", "run: " + jsonObject.toString());
 
                 new HttpRequest(builder.getContext())
                         .setRequestMethod(HttpRequest.POST)
