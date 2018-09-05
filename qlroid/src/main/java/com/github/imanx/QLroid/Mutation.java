@@ -29,11 +29,13 @@ public abstract class Mutation extends GraphCore {
     @Override
     public String getQuery() {
 
-        String     query       = "mutation mu %s { %s %s(%s)%s}";
-        String     mutationRaw = "";
-        String     params      = "";
+        String query = "mutation mu %s { %s %s(%s)%s}";
+
         JSONObject var         = null;
-        String     fields      = getFields().isEmpty() ? "" : "{" + getFields() + "}";
+        String mutationRaw = "";
+        String params      = "";
+
+        String fields = getFields().isEmpty() ? "" : "{" + getFields() + "}";
 
         if (getArgument() != null) {
             mutationRaw = getArgument().getMutationRaw();

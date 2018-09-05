@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
@@ -16,13 +15,13 @@ import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "TAG_A";
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private String baseUrl = "http://192.168.66.115/api/graphql/my";
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         final TextView txt = findViewById(R.id.txt);
 
         baseUrl = "http://91.239.55.205:8080/api/graphql/my";
+
+        this.uri = Uri.parse(baseUrl);
 
 
         Header header = new Header();
@@ -55,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public Request.Builder getQuery(){
-        return new Request.Builder(this, Uri.parse(baseUrl), new Query() {
+    public Request.Builder getQuery() {
+        return new Request.Builder(this, uri, new Query() {
             @Nullable
             @Override
             public String getOperationName() {
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public String[] getResponseFields() {
-                return new String[]{"id","pan"};
+                return new String[]{"id", "pan"};
             }
         });
     }
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     // get Mutation Request Builder
     public Request.Builder getMutation() {
 
-        return new Request.Builder(this, Uri.parse(baseUrl), new Mutation() {
+        return new Request.Builder(this, uri, new Mutation() {
 
             @Override
             public String getOperationName() {
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public Argument getArgument() {
                 Argument argument = new Argument();
                 argument.add(new Arg("pan", "6037997228928280", MaskedPan.class)
-                        , new Arg("expired_at", "2020-02-00", Date.class));
+                        , new Arg("expired_at", "2121-02-00", Date.class));
                 return argument;
             }
         });
