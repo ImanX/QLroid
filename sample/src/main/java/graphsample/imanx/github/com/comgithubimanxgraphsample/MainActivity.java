@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
@@ -14,7 +15,9 @@ import com.github.imanx.QLroid.request.Argument;
 import com.github.imanx.QLroid.request.Header;
 import com.github.imanx.QLroid.request.Request;
 
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
         this.uri = Uri.parse(baseUrl);
 
+        String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFmMjAxZjEzMjYxYjhkN2NjNGY3MGNmOTEyOWMwZWJmMzcwYzU5ZTc4OWZmMTI0MmY0YjUwZDY2NmFhZTMyOGQyZDkxMDA5MmExMWE2Y2EwIn0.eyJhdWQiOiIxIiwianRpIjoiYWYyMDFmMTMyNjFiOGQ3Y2M0ZjcwY2Y5MTI5YzBlYmYzNzBjNTllNzg5ZmYxMjQyZjRiNTBkNjY2YWFlMzI4ZDJkOTEwMDkyYTExYTZjYTAiLCJpYXQiOjE1MzYzOTA0OTAsIm5iZiI6MTUzNjM5MDQ5MCwiZXhwIjoxNTY3OTI2NDg5LCJzdWIiOiI0Iiwic2NvcGVzIjpbXX0.bYsMikHMgLwF0jCBwrvy75jGLRSr4hE-eBdgleefdIB4l566KdpXuQeZGcYiCT_3zYRLa818EN0poYAPsl57oHJsDJ6gG4u1HmulJ6W83CH3CdL9PNR2pEBJ3r9B7-Ma28FKRm7dAIEIe8tBNZYfnemPvSI13qzMsRNC7qAnJ9tW2MWwvYp0D4T3yvyKr4bzjP28t1iae_4EJWLHfUSAgqzC9swXJZHJnvMs7Oe-HI7sCVmK79XZt-Tn-DMSficthU2T7U8JMWuMqgc7dMpJzkeVB4d4rptuC_rFUltK0LlwNis7LkJCMQW4CKPblZSndDKJ8l69QcF9OWgRgGGtDiHPAazPS5u-MxkceKX9f5usaBCTChFD3PQ1FwnXvkrGO_ZDQP2IFNCZSTXCwVdlXmvsEsM1vDYfElfLdA2LyUTE81nuX-4Ps3KJ-RXH3lscHRjjHpIETzhZaCoUbXSYi7I3EC789KKFdj5MNLSPtpdcuxxzFlMZ9pHIo77AUgo8az0HhKpAqlZ5o5rIcf-dn6M1V_4fHptrPzwfJgyuzIhdzBaD4S7TYdOWY-A_x75w8TG6UXR9Paffe4ZjITkOmbsNdlVpcLd6qaoaQX0nskw-92xVfDkRm48HT-K9JZf0dfHY4ROfuiLeSr4KTyJyCmTs6iFRBK3xPR1BUr2aQ_U";
 
         Header header = new Header();
         header.append(
-                "Authorization",
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImE4ZGU0YjJiZDlkMDQ4Y2E4ZDJjMDQzYmNiMjgzODM1MTJhZGY1N2NjNmZjODI3Njk2ODJjY2U3NmMwMTE5YmZkNzRmMTU3YzdjMzI2NzM2In0.eyJhdWQiOiIxIiwianRpIjoiYThkZTRiMmJkOWQwNDhjYThkMmMwNDNiY2IyODM4MzUxMmFkZjU3Y2M2ZmM4Mjc2OTY4MmNjZTc2YzAxMTliZmQ3NGYxNTdjN2MzMjY3MzYiLCJpYXQiOjE1MzUxODA1MzgsIm5iZiI6MTUzNTE4MDUzOCwiZXhwIjoxNTY2NzE2NTM4LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.OPLiIE5270mMTyt8W4KVnH6nSavuORMC5-JEdK0lDJCx283zDiLnCxh3Fbj35EH6ezvfosSm89vL_-xfJRgAgvdj2erRLvct0Lzj-9PZlbQRXYtw0B8pf2oAVwZG0WJiQhUTH4cTWFv6RmZSUyzYI9EWQJQ1u3ylkbmynoVMox3ZnmubwTFMUHenicI69ipk5GHoBGWAYQ098iV2o4Qu9ge9B4kFd3DsVU8kkU_ASPzg5YM61eHOeOho99GVFpn6roEEvCNiRALIihmZfCFjf90HoIbXV_gQhJc_mMnlSs2FWHRtNM0VLplnd_1AttyiR9Qi0LgHnqy0YcVNz7x9rBpPYXrxvLauhqRermxAF1qJO8VZTHIwifHJ5tpx8UgLHVzrpU2M4e9JDm0QiAs0dS8dP2tW_uUEEbVokumws2BefuvvPzQ1H6RyObiTKOfMpLEXCul8OmGfzeKIbQwhJwedUpS5TmN9gIgm7QIEE0JseMojJOLqBF8EdpQ0hEEWt7gZQhUiJzbdCCh9Pj8x8dghEikdBtYGiGHnhnwxUA3C62aebnVYrGnEGaNQPEaGUJs3v9LnQPAnxzXLyMirJSh0CHlAjgJ7d2Sw8hmPsCtaNmJhrqSmShzE3m1JqS0wanxs7gT5C_UCUQkTLo2juIaVbUS3PEwsXIwuXqCMqhQ");
+                "Authorization", token);
 
         getMutation().setHeader(header)
                 .setTimeout(10)
@@ -74,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
     // get Mutation Request Builder
     public Request.Builder getMutation() {
 
-        return new Request.Builder(this, uri, new Mutation() {
+        return new Request.Builder(this, uri, new Mutation(new Me()) {
 
             @Override
             public String getOperationName() {
-                return "CardAdd";
+                return "PreferencesEdit";
             }
 
             @Override
@@ -89,8 +92,49 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Argument getArgument() {
                 Argument argument = new Argument();
-                argument.add(new Arg("pan", "6037997228928280", MaskedPan.class)
-                        , new Arg("expired_at", "2121-02-00", Date.class));
+                argument.add(new Arg("username", "farshid_zp", String.class)
+                        , new Arg("email", "farshid@email.com", String.class));
+
+
+                try {
+                    JSONArray array = new JSONArray();
+
+
+                    // New Ticket
+
+                    JSONObject newTicket = new JSONObject();
+                    newTicket.put("type", "TICKET_NEW");
+
+                    JSONArray channels = new JSONArray();
+                    channels.put("MAIL");
+                    channels.put("PUSH");
+
+                    newTicket.put("channels", channels);
+
+
+                    // Replay Ticket
+
+                    JSONObject ticketReplay = new JSONObject();
+                    ticketReplay.put("type", "TICKET_REPLY");
+
+                    JSONArray channelsReplay = new JSONArray();
+                    channelsReplay.put("MAIL");
+                    channelsReplay.put("WEBHOOK");
+
+                    ticketReplay.put("channels", channelsReplay);
+
+
+                    // Add Items
+                    array.put(newTicket);
+                    array.put(ticketReplay);
+
+
+                    argument.add(new Arg("notification_preferences", array, UserNotificationPreferencesInput[].class));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 return argument;
             }
         });

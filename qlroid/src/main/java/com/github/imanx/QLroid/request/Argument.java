@@ -36,6 +36,11 @@ public class Argument {
         for (Arg arg : args) {
             String name = arg.getType().getSimpleName();
             String type = name.toUpperCase().charAt(0) + name.substring(1, name.length());
+            if (type.contains("[]")) {
+                type = type.replaceAll("\\[]", "");
+                type = "[" + type + "]";
+            }
+
 
             try {
                 object.put("$" + arg.getKey(), type + "!");
