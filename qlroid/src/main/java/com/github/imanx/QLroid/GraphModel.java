@@ -26,7 +26,6 @@ public class GraphModel {
         if (clazz == null) {
             return builder
                     .append("}")
-                    .append("\n")
                     .toString();
         }
         String parentName = clazz.getSimpleName();
@@ -45,7 +44,7 @@ public class GraphModel {
             builder.append("%s");
         }
 
-        builder.append("{\n");
+        builder.append("{");
 
         for (Field field : clazz.getDeclaredFields()) {
 
@@ -76,9 +75,7 @@ public class GraphModel {
             }
 
 
-            builder
-                    .append(fieldName)
-                    .append("\n");
+            builder.append(fieldName).append(" ");
         }
 
         for (Class child : clazz.getDeclaredClasses()) {

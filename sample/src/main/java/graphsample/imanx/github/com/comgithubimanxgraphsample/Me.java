@@ -6,7 +6,7 @@ import com.github.imanx.QLroid.annonations.UnInject;
 
 import java.util.List;
 
-public class Mes extends GraphModel {
+public class Me extends GraphModel {
 
     private String avatar;
     private String email;

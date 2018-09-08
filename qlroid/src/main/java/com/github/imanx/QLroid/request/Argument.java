@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,33 +31,44 @@ public class Argument {
 
     public String getMutationRaw() {
 
-        StringBuilder raw = new StringBuilder();
+        JSONObject object = new JSONObject();
+
+        for (Arg arg : args) {
+            String name = arg.getType().getSimpleName();
+            String type = name.toUpperCase().charAt(0) + name.substring(1, name.length());
+            if (type.contains("[]")) {
+                type = type.replaceAll("\\[]", "");
+                type = "[" + type + "]";
+            }
 
 
-        for (int i = 0; i < args.size(); i++) {
-            Arg arg = this.args.get(i);
-            String type = arg.getType().getSimpleName().toUpperCase().charAt(0) + arg.getType().getSimpleName().
-                    substring(1, arg.getType().getSimpleName().length());
-
-            raw.append(String.format("$%s:%s!", arg.getKey(), type));
-            if (i < (this.args.size() - 1)) {
-                raw.append(",");
+            try {
+                object.put("$" + arg.getKey(), type + "!");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-        return raw.toString();
+
+        String json = object.toString().replaceAll("\"", "");
+        json = json.replaceAll("\\{", "");
+        return json.replaceAll("\\}", "");
     }
 
     public String getParameter() {
-        StringBuilder str = new StringBuilder();
 
-        for (int i = 0; i < args.size(); i++) {
-            Arg arg = this.args.get(i);
-            str.append(String.format("%s:$%s", arg.getKey(), arg.getKey()));
-            if (i < (this.args.size() - 1)) {
-                str.append(",");
+        JSONObject object = new JSONObject();
+
+        for (Arg arg : args) {
+            try {
+                object.put(arg.getKey(), " $" + arg.getKey());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-        return str.toString();
+
+        String json = object.toString().replaceAll("\"", "");
+        json = json.replaceAll("\\{", "");
+        return json.replaceAll("\\}", "");
     }
 
     public JSONObject getQueryRaw() {

@@ -25,6 +25,8 @@ import org.json.JSONObject;
 
 public class Request {
 
+    public static String TAG = Request.class.getSimpleName();
+
     private Builder  builder;
     private Callback callback;
 
@@ -53,9 +55,9 @@ public class Request {
 
                     jsonObject.put("operationName", null);
                     jsonObject.put("query", builder.getGraphCore().getQuery());
+
                     if (builder.getGraphCore().getVariables() != null) {
-                        JSONObject json = builder.getGraphCore().getVariables();
-                        jsonObject.put("variables", json);
+                        jsonObject.put("variables", builder.getGraphCore().getVariables());
                     }
 
                 } catch (JSONException e) {
