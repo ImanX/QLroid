@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONArray array = new JSONArray();
 
-
                     // New Ticket
 
                     JSONObject newTicket = new JSONObject();
