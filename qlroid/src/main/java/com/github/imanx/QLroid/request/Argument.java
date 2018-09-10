@@ -85,4 +85,20 @@ public class Argument {
         return object;
     }
 
+    public String getQueryParameter() {
+
+        JSONObject object = new JSONObject();
+
+        for (Arg arg : args) {
+            try {
+                object.put(arg.getKey(), arg.getValue());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        String json = object.toString().replaceAll("\"", "");
+        json = json.replaceAll("\\{", "");
+        return json.replaceAll("\\}", "");
+    }
+
 }

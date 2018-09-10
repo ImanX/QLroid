@@ -90,7 +90,7 @@ public class GraphModel {
     protected String buildQuery(@Nullable Argument arg, @Nullable String operationName) {
         String query = recycle(this.getClass(), new StringBuilder(), operationName);
         if (arg != null) {
-            return String.format(query, "(" + arg.getQueryRaw() + ")");
+            return String.format(query, "(" + arg.getQueryParameter() + ")");
         }
         return query.replaceAll("%s", "");
     }
