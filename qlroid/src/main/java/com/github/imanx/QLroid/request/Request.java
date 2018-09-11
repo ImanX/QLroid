@@ -104,7 +104,7 @@ public class Request {
                             @Override
                             public void onFailureResponse(int httpCode, String dataError) {
                                 Log.i("TAG", "onFailureResponse: " + httpCode + " || " + dataError);
-                                if (callback != null) callback.onFailure();
+                                if (callback != null) callback.onFailure(httpCode, dataError);
                             }
                         });
             }
