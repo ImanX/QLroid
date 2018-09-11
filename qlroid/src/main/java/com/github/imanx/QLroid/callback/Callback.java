@@ -8,5 +8,5 @@ package com.github.imanx.QLroid.callback;
 public interface Callback {
     void onResponse(String response);
 
-    void onFailure();
+    void onFailure(int httpCode, String data);
 }
