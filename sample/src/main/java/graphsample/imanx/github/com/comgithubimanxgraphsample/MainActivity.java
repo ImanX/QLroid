@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure() {
-                        txt.setText("response failure");
+                    public void onFailure(int httpCode, String data) {
+                        txt.setText("response failure " + httpCode + " || " + data);
                     }
                 });
     }
