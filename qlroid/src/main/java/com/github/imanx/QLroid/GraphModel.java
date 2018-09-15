@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
-import com.github.imanx.QLroid.http.Argument;
+import com.github.imanx.QLroid.request.Argument;
 
 import java.lang.reflect.Field;
 
