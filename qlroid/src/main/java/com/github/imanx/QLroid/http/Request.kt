@@ -1,4 +1,5 @@
-package com.github.imanx.QLroid.request
+package com.github.imanx.QLroid.http
+
 
 import android.content.Context
 import android.net.Uri
@@ -18,7 +19,7 @@ import java.io.IOException
 
 
 /**
- * Created by ImanX.
+ * Created by Farshid Roohi.
  * QLroid | Copyrights 2018 ZarinPal Crop.
  */
 
@@ -162,14 +163,8 @@ class Request private constructor(private val builder: Builder) {
             return Request(this)
         }
 
-
         fun getTimeout(): Int {
             return this.timeout
         }
-    }
-
-    companion object {
-
-        var TAG = Request::class.java.simpleName
     }
 }

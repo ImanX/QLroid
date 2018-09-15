@@ -1,4 +1,4 @@
-package com.github.imanx.QLroid.request;
+package com.github.imanx.QLroid.http;
 
 import com.github.imanx.QLroid.argument.Arg;
 
