@@ -2,6 +2,7 @@ package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .enqueue(new Callback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(final String response) {
+
                         txt.setText("response : " + response);
                     }
 
                     @Override
-                    public void onFailure(int httpCode, String data) {
+                    public void onFailure(final int httpCode, final String data) {
                         txt.setText("response failure " + httpCode + " || " + data);
                     }
                 });

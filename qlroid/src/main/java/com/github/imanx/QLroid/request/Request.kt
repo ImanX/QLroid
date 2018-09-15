@@ -2,25 +2,19 @@ package com.github.imanx.QLroid.request
 
 import android.content.Context
 import android.net.Uri
+import android.os.Looper
 import android.util.Log
-
 import com.github.imanx.QLroid.GraphCore
-import com.github.imanx.QLroid.GraphModel
 import com.github.imanx.QLroid.Mutation
 import com.github.imanx.QLroid.Query
 import com.github.imanx.QLroid.callback.Callback
-import com.github.imanx.QLroid.http.ApiInterface
 import com.github.imanx.QLroid.utility.Utility
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.zarinpal.libs.httpRequest.HttpRequest
-import com.zarinpal.libs.httpRequest.OnCallbackRequestListener
-import org.json.JSONArray
-
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Response
+import java.io.IOException
 
 
 /**
@@ -58,110 +52,60 @@ class Request private constructor(private val builder: Builder) {
             e.printStackTrace()
         }
 
-        val api = ApiInterface.create(this.builder.getHeader()!!)
-        val call = api.getRequest(jsonObject.toString())
-        call.enqueue(object : retrofit2.Callback<String> {
-            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+        val okHttpClient = OkHttpClient()
+        val request = okhttp3.Request.Builder()
+        for ((key, value) in this.builder.getHeader()!!.map) {
+            request.addHeader(key, value)
+        }
+        request.url(this.builder.uri!!.toString())
 
-                if (!response!!.isSuccessful) {
-                    if (callback != null) callback!!.onFailure(response.code(), response.errorBody().toString())
-                    return
-                }
+        val type = MediaType.parse("application/json; charset=utf-8")
+        val requestBody = RequestBody.create(type, jsonObject.toString())
+        request.post(requestBody)
 
-                Log.i("AA", "A : ${response.body()}")
 
-                if (1 == 1) {
+        okHttpClient.newCall(request.build()).enqueue(object : okhttp3.Callback {
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+
+                val responseRequest = response.body()!!.string()
+
+                if (!response.isSuccessful) {
+                    if (callback != null) callback!!.onFailure(response.code(), response.message())
                     return
                 }
 
                 val model = builder.graphCore!!.model
                 val masterKey = if (model == null) builder.graphCore!!.operationName else model.responseModelName
-                val wrappedJson = Utility.getWrappedJson(JSONObject(response.body()), masterKey)
-
+                val wrappedJson = Utility.getWrappedJson(JSONObject(responseRequest), masterKey)
 
                 if (callback == null) {
                     return
                 }
 
-                if (wrappedJson == null) {
-                    callback!!.onResponse(response.body().toString())
-                    return
+                val handler = android.os.Handler(Looper.getMainLooper())
+                handler.post {
+                    when {
+                        wrappedJson == null -> callback!!.onResponse(responseRequest)
+                        model == null -> callback!!.onResponse(wrappedJson)
+                        else -> {
+                            val result = Utility.refactor(model.javaClass, wrappedJson)
+                            callback!!.onResponse(result)
+                        }
+                    }
+
                 }
 
-                if (model == null) {
-                    callback!!.onResponse(wrappedJson)
-                    return
-                }
 
-                val result = Utility.refactor(model.javaClass, wrappedJson)
-                callback!!.onResponse(result)
             }
 
-
-            override fun onFailure(call: Call<String>?, t: Throwable?) {
-                if (t == null) {
-                    return
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                Log.i("LOG:::", "ERROR : ${e.message}")
+                val handler = android.os.Handler(Looper.getMainLooper())
+                handler.post {
+                    if (callback != null) callback!!.onFailure(e.hashCode(), e.message)
                 }
-                if (callback != null) callback!!.onFailure(0, t.message)
             }
-
         })
-
-//            val jsonObject = JSONObject()
-//            try {
-//
-//                jsonObject.put("operationName", null)
-//                jsonObject.put("query", builder.graphCore!!.query)
-//
-//                if (builder.graphCore!!.variables != null) {
-//                    jsonObject.put("variables", builder.graphCore!!.variables)
-//                }
-//
-//            } catch (e: JSONException) {
-//                e.printStackTrace()
-//            }
-//
-//            Log.i("AAAAAA", "run: " + jsonObject.toString())
-//
-//            HttpRequest(builder.context)
-//                    .setRequestMethod(HttpRequest.POST)
-//                    .setHeaders(builder.getHeader()!!.map)
-//                    .setTimeOut(builder.getTimeout())
-//                    .setURL(builder.uri!!.toString())
-//                    .setJson(jsonObject)
-//                    .get(object : OnCallbackRequestListener() {
-//                        override fun onSuccessResponse(jsonObject: JSONObject, content: String) {
-//
-//                            val model = builder.graphCore!!.model
-//                            val masterKey = if (model == null) builder.graphCore!!.operationName else model.responseModelName
-//                            val wrappedJson = Utility.getWrappedJson(jsonObject, masterKey)
-//
-//
-//                            if (callback == null) {
-//                                return
-//                            }
-//
-//                            if (wrappedJson == null) {
-//                                callback!!.onResponse(content)
-//                                return
-//                            }
-//
-//
-//                            if (model == null) {
-//                                callback!!.onResponse(wrappedJson)
-//                                return
-//                            }
-//
-//                            val result = Utility.refactor(model.javaClass, wrappedJson)
-//                            callback!!.onResponse(result)
-//
-//                        }
-//
-//                        override fun onFailureResponse(httpCode: Int, dataError: String) {
-//                            Log.i("TAG", "onFailureResponse: $httpCode || $dataError")
-//                            if (callback != null) callback!!.onFailure(httpCode, dataError)
-//                        }
-//                    })
 
     }
 
