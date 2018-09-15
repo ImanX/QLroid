@@ -1,4 +1,4 @@
-package com.github.imanx.QLroid.http;
+package com.github.imanx.QLroid.request;
 
 import java.util.HashMap;
 import java.util.Map;
