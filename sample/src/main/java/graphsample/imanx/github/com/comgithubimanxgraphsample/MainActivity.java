@@ -4,16 +4,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.github.imanx.QLroid.Mutation;
 import com.github.imanx.QLroid.Query;
 import com.github.imanx.QLroid.argument.Arg;
 import com.github.imanx.QLroid.callback.Callback;
-import com.github.imanx.QLroid.request.Argument;
-import com.github.imanx.QLroid.request.Header;
-import com.github.imanx.QLroid.request.Request;
+import com.github.imanx.QLroid.http.Argument;
+import com.github.imanx.QLroid.http.Header;
+import com.github.imanx.QLroid.http.Request;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .enqueue(new Callback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(final String response) {
+
                         txt.setText("response : " + response);
                     }
 
                     @Override
-                    public void onFailure() {
-                        txt.setText("response failure");
+                    public void onFailure(final int httpCode, final String data) {
+                        txt.setText("response failure " + httpCode + " || " + data);
                     }
                 });
     }

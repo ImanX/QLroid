@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 
 import com.github.imanx.QLroid.annonations.SerializedField;
 import com.github.imanx.QLroid.annonations.UnInject;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
