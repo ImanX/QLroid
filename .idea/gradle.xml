@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/qlroid" />
+            <option value="$PROJECT_DIR$/qlroidx" />
             <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>
