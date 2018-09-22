@@ -1,1 +1,1 @@
-include ':sample', ':qlroid'
+include ':sample', ':qlroid', ':qlroidx'
