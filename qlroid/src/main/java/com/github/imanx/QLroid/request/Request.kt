@@ -71,7 +71,7 @@ class Request private constructor(private val builder: Builder) {
                 val responseRequest = response.body()!!.string()
 
                 if (!response.isSuccessful) {
-                    if (callback != null) callback!!.onFailure(response.code(), response.message())
+                    if (callback != null) callback!!.onFailure(response.code(), responseRequest)
                     return
                 }
 
