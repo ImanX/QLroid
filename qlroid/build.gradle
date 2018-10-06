@@ -27,7 +27,7 @@ android {
 
 }
 
-def versionLib = '0.0.19'
+def versionLib = '0.0.20'
 
 group = 'com.zarinpal'
 version = versionLib
