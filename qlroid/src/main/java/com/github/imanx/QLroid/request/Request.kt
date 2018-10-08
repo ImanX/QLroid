@@ -82,18 +82,13 @@ class Request private constructor(private val builder: Builder) {
                 if (callback == null) {
                     return
                 }
-
-                val handler = android.os.Handler(Looper.getMainLooper())
-                handler.post {
-                    when {
-                        wrappedJson == null -> callback!!.onResponse(responseRequest)
-                        model == null -> callback!!.onResponse(wrappedJson)
-                        else -> {
-                            val result = Utility.refactor(model.javaClass, wrappedJson)
-                            callback!!.onResponse(result)
-                        }
+                when {
+                    wrappedJson == null -> callback!!.onResponse(responseRequest)
+                    model == null -> callback!!.onResponse(wrappedJson)
+                    else -> {
+                        val result = Utility.refactor(model.javaClass, wrappedJson)
+                        callback!!.onResponse(result)
                     }
-
                 }
 
 
