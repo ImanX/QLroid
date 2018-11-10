@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-def versionLib = '0.0.22'
+def versionLib = '0.0.23'
 
 group = 'com.zarinpal'
 version = versionLib
