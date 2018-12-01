@@ -34,8 +34,9 @@ public class Argument {
         JSONObject object = new JSONObject();
 
         for (Arg arg : args) {
-            String name = arg.getType().getSimpleName();
-            String type = name.toUpperCase().charAt(0) + name.substring(1, name.length());
+            String  name        = arg.getType().getSimpleName();
+            String  type        = name.toUpperCase().charAt(0) + name.substring(1, name.length());
+            boolean hasOptional = arg.isHasOptional();
             if (type.contains("[]")) {
                 type = type.replaceAll("\\[]", "");
                 type = "[" + type + "]";
@@ -43,7 +44,7 @@ public class Argument {
 
 
             try {
-                object.put("$" + arg.getKey(), type + "!");
+                object.put("$" + arg.getKey(), type + (hasOptional ? "!" : ""));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
