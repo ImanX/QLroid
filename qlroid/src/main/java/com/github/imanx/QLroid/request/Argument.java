@@ -44,7 +44,7 @@ public class Argument {
 
 
             try {
-                object.put("$" + arg.getKey(), type + (hasOptional ? "!" : ""));
+                object.put("$" + arg.getKey(), type + (hasOptional ? "" : "!"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
