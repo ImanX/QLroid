@@ -3,10 +3,17 @@ package com.github.imanx.QLroid.argument;
 public class Arg {
 
 
-    private String key;
-    private Object value;
-    private Class  type;
+    private String  key;
+    private Object  value;
+    private Class   type;
+    private boolean optional;
 
+    public Arg(String key, Object value, Class type, boolean optional) {
+        this.key = key;
+        this.value = value;
+        this.type = type;
+        this.optional = optional;
+    }
     public Arg(String key, Object value, Class type) {
         this.key = key;
         this.value = value;
@@ -40,5 +47,13 @@ public class Arg {
 
     public void setType(Class type) {
         this.type = type;
+    }
+
+    public void setHasOptional(boolean hasOptional) {
+        this.optional = hasOptional;
+    }
+
+    public boolean isHasOptional() {
+        return optional;
     }
 }

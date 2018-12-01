@@ -10,9 +10,7 @@ import com.github.imanx.QLroid.Mutation
 import com.github.imanx.QLroid.Query
 import com.github.imanx.QLroid.callback.Callback
 import com.github.imanx.QLroid.utility.Utility
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody
+import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -58,6 +56,9 @@ class Request private constructor(private val builder: Builder) {
         for ((key, value) in this.builder.getHeader()!!.map) {
             request.addHeader(key, value)
         }
+        request.header("User-Agent", "android-user-agent")
+
+
         request.url(this.builder.uri!!.toString())
 
         val type = MediaType.parse("application/json; charset=utf-8")
@@ -103,6 +104,20 @@ class Request private constructor(private val builder: Builder) {
             }
         })
 
+    }
+
+    /* This interceptor adds a custom User-Agent. */
+    inner class UserAgentInterceptor(private val userAgent: String) : Interceptor {
+
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest = chain.request()
+
+            val requestWithUserAgent = originalRequest.newBuilder()
+            requestWithUserAgent.header("User-Agent", userAgent)
+//            requestWithUserAgent.header()
+            return chain.proceed(requestWithUserAgent.build())
+        }
     }
 
     // Builder segment

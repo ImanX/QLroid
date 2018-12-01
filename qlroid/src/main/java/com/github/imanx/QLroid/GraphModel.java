@@ -57,6 +57,10 @@ public class GraphModel {
                 continue;
             }
 
+            if (field.getName().equals("$change") || field.getName().equals("serialVersionUID")) {
+                continue;
+            }
+
 
             String fieldName = field.getName();
 

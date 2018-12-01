@@ -1,8 +1,8 @@
 package graphsample.imanx.github.com.comgithubimanxgraphsample;
 
 import com.github.imanx.QLroid.GraphModel;
-import com.github.imanx.qlroidx.annotation.SerializedField;
-import com.github.imanx.qlroidx.annotation.UnInject;
+import com.github.imanx.QLroid.annonations.SerializedField;
+import com.github.imanx.QLroid.annonations.UnInject;
 
 
 import java.util.List;
