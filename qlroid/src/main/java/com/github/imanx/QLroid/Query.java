@@ -21,10 +21,10 @@ public abstract class Query extends GraphCore {
     @Override
     public String getQuery() {
 
-        String query = "query qr %s { %s %s(%s)%s}";
+        String query = "query qr %s { %s %s%s%s}";
 
         JSONObject var         = null;
-        String     mutationRaw = "";
+        String     queryRaw = "";
         String     params      = "";
 
         String fields = getFields().isEmpty() ? "" : "{" + getFields() + "}";
@@ -34,15 +34,26 @@ public abstract class Query extends GraphCore {
         }
 
         if (getArgument() != null) {
-            mutationRaw = getArgument().getMutationRaw();
+            queryRaw = getArgument().getMutationRaw();
             params = getArgument().getParameter();
             var = getArgument().getQueryRaw();
         }
 
         setVariables(var);
 
+        if (queryRaw != null && !queryRaw.isEmpty()) {
+            queryRaw = "(" + queryRaw + ")";
+        } else {
+            queryRaw = "";
+        }
+
+        if (params != null && !params.isEmpty()) {
+            params = "(" + params + ")";
+        } else {
+            params = "";
+        }
         query = String.format(query,
-                "(" + mutationRaw + ")",
+                queryRaw,
                 getModel() == null ? "" : String.format("%s :", getModel().getResponseModelName()),
                 getOperationName(),
                 params,
