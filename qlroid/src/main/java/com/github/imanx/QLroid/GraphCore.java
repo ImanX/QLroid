@@ -69,7 +69,7 @@ public abstract class GraphCore {
 
         //TODO this needs a Illegal Exception.
 
-        List<Field>  fields = Arrays.asList(getModel().getClass().getDeclaredFields());
+        Field[]      fields = getModel().getClass().getDeclaredFields();
         List<String> result = new ArrayList<>();
         for (Field field : fields) {
             if (field.getAnnotation(UnInject.class) != null) {

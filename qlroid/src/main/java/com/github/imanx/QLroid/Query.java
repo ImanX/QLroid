@@ -1,5 +1,7 @@
 package com.github.imanx.QLroid;
 
+import org.json.JSONObject;
+
 /**
  * Created by ImanX.
  * QLroid | Copyrights 2018 ZarinPal Crop.
@@ -19,29 +21,33 @@ public abstract class Query extends GraphCore {
     @Override
     public String getQuery() {
 
-        String query         = "query { %s  %s { %s }}";
-        String operationName = getOperationName();
-        String responseName  = "";
+        String query = "query qr %s { %s %s(%s)%s}";
+
+        JSONObject var         = null;
+        String     mutationRaw = "";
+        String     params      = "";
+
+        String fields = getFields().isEmpty() ? "" : "{" + getFields() + "}";
 
         if (getModel() != null) {
-            responseName = String.format("%s :", getModel().getResponseModelName());
+            fields = getModel().buildQuery(null, "");
         }
-
-
-        if (getModel() != null) {
-            return "query { " + getModel().buildQuery(getArgument(), responseName + "" + getOperationName()) + "}";
-        }
-
 
         if (getArgument() != null) {
-            operationName = String.format("(%s)", getArgument().getQueryRaw());
+            mutationRaw = getArgument().getMutationRaw();
+            params = getArgument().getParameter();
+            var = getArgument().getQueryRaw();
         }
 
-        return String.format(
-                query,
-                responseName,
-                operationName,
-                getFields()
+        setVariables(var);
+
+        query = String.format(query,
+                "(" + mutationRaw + ")",
+                getModel() == null ? "" : String.format("%s :", getModel().getResponseModelName()),
+                getOperationName(),
+                params,
+                fields
         );
+        return query;
     }
 }

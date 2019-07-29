@@ -144,7 +144,6 @@ class Request private constructor(private val builder: Builder) {
             this.graphCore = mutation
             this.context = context
         }
-
         constructor(context: Context, uri: Uri) {
             this.uri = uri
             this.context = context

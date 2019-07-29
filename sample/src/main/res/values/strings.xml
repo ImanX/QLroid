@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">qlroid sample</string>
+    <string name="hello_graphql">Hello GraphQL</string>
 </resources>

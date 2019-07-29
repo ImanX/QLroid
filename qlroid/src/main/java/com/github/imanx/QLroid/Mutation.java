@@ -1,8 +1,6 @@
 package com.github.imanx.QLroid;
 
 
-import android.util.Log;
-
 import com.github.imanx.QLroid.request.Argument;
 
 import org.json.JSONObject;
@@ -58,7 +56,6 @@ public abstract class Mutation extends GraphCore {
                 params,
                 fields
         );
-        Log.i("AAAA", "getQuery: " + query);
         return query;
     }
 }
